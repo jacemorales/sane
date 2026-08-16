@@ -3,393 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANE - Modern Fashion & Style</title>
+    <title>SANE | RAW STREETWEAR</title>
+    <!-- Paystack Inline JS -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Space Grotesk / Syncopate / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&family=Syncopate:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Animation Background */
-        .bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .bg {
-            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
-            animation: gradient 15s ease infinite;
-        }
-
-        .bg2 {
-            background: linear-gradient(45deg, #e5e7eb, #d1d5db);
-            animation: gradient 15s ease infinite;
-            animation-delay: -5s;
-        }
-
-        .bg3 {
-            background: linear-gradient(45deg, #d1d5db, #9ca3af);
-            animation: gradient 15s ease infinite;
-            animation-delay: -10s;
-        }
-
-        @keyframes gradient {
-            0% { transform: translateX(0) translateY(0); }
-            50% { transform: translateX(50%) translateY(25%); }
-            100% { transform: translateX(0) translateY(0); }
-        }
-
-        /* Hero Section with Animation */
-        .hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            text-align: center;
-            z-index: 1;
-            animation: fadeIn 1s ease-out;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #000, #333);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGlow 2s ease-in-out infinite alternate;
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: #333;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #000, #333);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 10px rgba(0,0,0,0.2); }
-            to { text-shadow: 0 0 20px rgba(0,0,0,0.4); }
-        }
-
-        /* Clothing Animation */
-        .clothing-animation {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            opacity: 0.7;
-            perspective: 1000px;
-        }
-
-        .clothing-item {
-            position: relative;
-            width: 200px;
-            height: 300px;
-            transform-style: preserve-3d;
-            animation: float 3s ease-in-out infinite;
-            transform-origin: center center;
-        }
-
-        .clothing-item:nth-child(1) { 
-            animation-delay: 0s;
-            transform-origin: 50% 50%;
-        }
-        .clothing-item:nth-child(2) { 
-            animation-delay: -1s;
-            transform-origin: 50% 50%;
-        }
-        .clothing-item:nth-child(3) { 
-            animation-delay: -2s;
-            transform-origin: 50% 50%;
-        }
-
-        .clothing-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-            transform-style: preserve-3d;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotateY(0); }
-            50% { transform: translateY(-50px) rotateY(10deg); }
-        }
-
-        .clothing-item:hover {
-            animation-play-state: paused;
-            transform: translateY(-20px) rotateY(20deg) scale(1.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.2rem;
-            }
-
-            .clothing-animation {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .clothing-item {
-                width: 150px;
-                height: 225px;
-            }
-        }
-    </style>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">SANE</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#new-arrivals">New Arrivals</a></li>
-                <li><a href="#collections">Collections</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div class="shopping-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count">0</span>
-            </div>
-            <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </div>
-        </nav>
-    </header>
+<body class="street-theme">
 
-    <section id="home" class="hero">
-        <div class="bg"></div>
-        <div class="bg bg2"></div>
-        <div class="bg bg3"></div>
-        
-        <div class="clothing-animation">
-            <div class="clothing-item">
-                <img src="images/hero1.jpg" alt="Fashion Item 1">
-            </div>
-            <div class="clothing-item">
-                <img src="images/hero2.jpg" alt="Fashion Item 2">
-            </div>
-            <div class="clothing-item">
-                <img src="images/hero3.jpg" alt="Fashion Item 3">
-            </div>
-        </div>
-
-        <div class="hero-content">
-            <h1>SANE Fashion</h1>
-            <p>Elevate Your Style, Define Your Statement</p>
-            <a href="#new-arrivals" class="cta-button">Shop Now</a>
-        </div>
-    </section>
-
-    <section id="new-arrivals" class="products">
-        <div class="container">
-            <h2>New Arrivals</h2>
-            <div class="product-grid">
-                <div class="product-card">
-                    <img src="images/product1.jpg" alt="Urban Streetwear Hoodie">
-                    <div class="product-info">
-                        <h3>Urban Streetwear Hoodie</h3>
-                        <p class="price">$59.99</p>
-                        <div class="product-options">
-                            <select class="size-select">
-                                <option value="">Select Size</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                            </select>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="images/product2.jpg" alt="Classic Denim Jacket">
-                    <div class="product-info">
-                        <h3>Classic Denim Jacket</h3>
-                        <p class="price">$79.99</p>
-                        <div class="product-options">
-                            <select class="size-select">
-                                <option value="">Select Size</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                            </select>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <img src="images/product3.jpg" alt="Premium Cotton T-Shirt">
-                    <div class="product-info">
-                        <h3>Premium Cotton T-Shirt</h3>
-                        <p class="price">$29.99</p>
-                        <div class="product-options">
-                            <select class="size-select">
-                                <option value="">Select Size</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                            </select>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="collections" class="collections">
-        <div class="container">
-            <h2>Our Collections</h2>
-            <div class="collection-grid">
-                <div class="collection-card">
-                    <img src="images/collection1.jpg" alt="Summer Collection">
-                    <div class="collection-info">
-                        <h3>Summer Collection</h3>
-                        <a href="#" class="collection-link">Shop Collection</a>
-                    </div>
-                </div>
-                <div class="collection-card">
-                    <img src="images/collection2.jpg" alt="Urban Style">
-                    <div class="collection-info">
-                        <h3>Urban Style</h3>
-                        <a href="#" class="collection-link">Shop Collection</a>
-                    </div>
-                </div>
-                <div class="collection-card">
-                    <img src="images/collection3.jpg" alt="Essentials">
-                    <div class="collection-info">
-                        <h3>Essentials</h3>
-                        <a href="#" class="collection-link">Shop Collection</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="about">
-        <div class="container">
-            <h2>About SANE</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>SANE is a contemporary fashion brand that combines urban style with sustainable practices. Our clothing is designed for those who appreciate quality, comfort, and conscious fashion choices.</p>
-                </div>
-                <div class="about-stats">
-                    <div class="stat">
-                        <h3>Sustainable</h3>
-                        <p>Eco-friendly Materials</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Quality</h3>
-                        <p>Premium Craftsmanship</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Style</h3>
-                        <p>Modern Design</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2>Get in Touch</h2>
-            <div class="contact-content">
-                <form class="contact-form">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Message" required></textarea>
-                    <button type="submit" class="submit-button">Send Message</button>
-                </form>
-                <div class="contact-info">
-                    <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <p>123 Fashion Street, City, Country</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-phone"></i>
-                        <p>+1 234 567 890</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <p>shop@sane.com</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Shopping Cart Sidebar -->
-    <div class="cart-sidebar">
-        <div class="cart-header">
-            <h3>Shopping Cart</h3>
-            <button class="close-cart"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="cart-items">
-            <!-- Cart items will be dynamically added here -->
-        </div>
-        <div class="cart-total">
-            <p>Total: <span>$0.00</span></p>
-            <button class="checkout-button">Proceed to Checkout</button>
+    <!-- TOP TICKER BAR -->
+    <div class="ticker-bar">
+        <div class="ticker-track">
+            <span>SANE STREETWEAR • RAW & UNFILTERED • TEL: 08021375140 • NIGERIA WIDE SHIPPING • SANE STREETWEAR • RAW & UNFILTERED • TEL: 08021375140</span>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">SANE</div>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
+    <!-- MAIN NAVBAR -->
+    <header class="navbar">
+        <div class="nav-brand">
+            <a href="#" class="brand-logo">SANE<span class="dot">.</span></a>
+        </div>
+        <div class="nav-actions">
+            <button class="nav-btn admin-trigger-btn" id="adminToggleBtn">
+                <i class="fa-solid fa-lock"></i> ADMIN
+            </button>
+            <button class="nav-btn cart-trigger-btn" id="cartToggleBtn">
+                CART [<span id="cartCount">0</span>]
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO SLIDESHOW SECTION -->
+    <section class="hero-section">
+        <div class="hero-slider" id="heroSlider">
+            <div class="slide active" style="background-image: url('images/photo_1_2026-08-16_23-43-46.jpg');">
+                <div class="slide-overlay">
+                    <h2 class="slide-title">NO COMPROMISE.</h2>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 SANE. All rights reserved.</p>
+            <div class="slide" style="background-image: url('images/photo_2_2026-08-16_23-43-46.jpg');">
+                <div class="slide-overlay">
+                    <h2 class="slide-title">RAW HEAVYWEIGHT.</h2>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('images/photo_3_2026-08-16_23-43-46.jpg');">
+                <div class="slide-overlay">
+                    <h2 class="slide-title">SANE VOL. 1</h2>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('images/1785196334.png');">
+                <div class="slide-overlay">
+                    <h2 class="slide-title">TUFF CUTS.</h2>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('images/1785252886.png');">
+                <div class="slide-overlay">
+                    <h2 class="slide-title">STREET ARCHIVE.</h2>
+                </div>
+            </div>
+        </div>
+        <div class="slider-controls">
+            <button class="slider-btn" id="prevSlide"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="slider-dots" id="sliderDots"></div>
+            <button class="slider-btn" id="nextSlide"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </section>
+
+    <!-- STORE SECTION / DROP CATALOG -->
+    <main class="store-container">
+        <div class="section-header">
+            <h2 class="section-title">CURRENT DROP</h2>
+            <span class="phone-tag"><i class="fa-solid fa-phone"></i> 08021375140</span>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <!-- Dynamically Rendered by script.js -->
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>SANE</h3>
+                <p>RAW STREETWEAR EST. 2024</p>
+                <p>DIRECT LINE: 08021375140</p>
+            </div>
+            <div class="footer-meta">
+                <p>&copy; 2024 SANE CLOTHING. ALL RIGHTS RESERVED.</p>
             </div>
         </div>
     </footer>
 
+    <!-- CART & CHECKOUT DRAWER -->
+    <div class="cart-drawer-overlay" id="cartOverlay">
+        <div class="cart-drawer">
+            <div class="drawer-header">
+                <h3>YOUR CART</h3>
+                <button class="close-btn" id="closeCartBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="drawer-body">
+                <div class="cart-items" id="cartItemsContainer">
+                    <!-- Cart Items HTML -->
+                </div>
+
+                <div class="checkout-form-container" id="checkoutFormSection">
+                    <h4 class="form-title">DELIVERY & PAYMENT DETAILS</h4>
+                    <form id="checkoutForm">
+                        <div class="form-group">
+                            <label>FULL NAME</label>
+                            <input type="text" id="custName" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>EMAIL ADDRESS</label>
+                            <input type="email" id="custEmail" placeholder="Enter email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>PHONE NUMBER</label>
+                            <input type="tel" id="custPhone" placeholder="080XXXXXXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label>DELIVERY ADDRESS</label>
+                            <textarea id="custAddress" rows="2" placeholder="Street address, city, state" required></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="drawer-footer">
+                <div class="cart-summary">
+                    <span>TOTAL:</span>
+                    <span class="total-price" id="cartTotalPrice">₦0</span>
+                </div>
+                <button class="pay-btn" id="paystackPayBtn">PAY WITH PAYSTACK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD MODAL -->
+    <div class="admin-modal-overlay" id="adminModalOverlay">
+        <div class="admin-modal">
+            <div class="admin-header">
+                <div>
+                    <h2>SANE ADMIN PORTAL</h2>
+                    <span class="sheet-info"><i class="fa-solid fa-database"></i> SPREADSHEET SYNC ACTIVE</span>
+                </div>
+                <button class="close-btn" id="closeAdminBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="admin-toolbar">
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-tab="ordersTab">ORDERS</button>
+                    <button class="tab-btn" data-tab="inventoryTab">INVENTORY / ITEMS</button>
+                </div>
+                <button class="notify-btn" id="enableNotificationsBtn">
+                    <i class="fa-solid fa-bell"></i> ENABLE ORDER PUSH NOTIFICATIONS
+                </button>
+            </div>
+
+            <div class="admin-body">
+                <!-- ORDERS TAB -->
+                <div class="tab-content active" id="ordersTab">
+                    <div class="filter-bar">
+                        <button class="filter-btn active" data-filter="all">ALL</button>
+                        <button class="filter-btn" data-filter="pending">PENDING</button>
+                        <button class="filter-btn" data-filter="processing">PROCESSING</button>
+                        <button class="filter-btn" data-filter="completed">COMPLETED</button>
+                    </div>
+                    <div class="orders-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ORDER ID / DATE</th>
+                                    <th>CUSTOMER DETAILS</th>
+                                    <th>ITEMS PURCHASED</th>
+                                    <th>TOTAL</th>
+                                    <th>STATUS</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- INVENTORY TAB -->
+                <div class="tab-content" id="inventoryTab">
+                    <div class="inventory-controls">
+                        <h3>ITEM MANAGEMENT</h3>
+                        <button class="add-item-btn" id="addNewItemBtn"><i class="fa-solid fa-plus"></i> ADD NEW ITEM</button>
+                    </div>
+
+                    <div class="add-item-form-card hidden" id="addItemFormCard">
+                        <h4 id="itemFormTitle">ADD NEW CLOTHING ITEM</h4>
+                        <form id="itemForm">
+                            <input type="hidden" id="editItemId">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>ITEM NAME</label>
+                                    <input type="text" id="itemName" placeholder="e.g. SANE HEAVY HOODIE" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>PRICE (NGN ₦)</label>
+                                    <input type="number" id="itemPrice" placeholder="25000" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>AVAILABLE STOCK QUANTITY</label>
+                                    <input type="number" id="itemStock" placeholder="50" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>IMAGE URL / PATH</label>
+                                    <input type="text" id="itemImage" placeholder="images/photo_1_2026-08-16_23-43-46.jpg" required>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="save-item-btn">SAVE ITEM</button>
+                                <button type="button" class="cancel-item-btn" id="cancelItemBtn">CANCEL</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="inventory-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>IMAGE</th>
+                                    <th>ITEM NAME</th>
+                                    <th>PRICE</th>
+                                    <th>STOCK QTY</th>
+                                    <th>STATUS</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
