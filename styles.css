@@ -407,6 +407,7 @@ section {
     font-weight: 600;
     border: 1px solid transparent;
     transition: var(--transition-fast);
+    cursor: pointer;
 }
 
 .cat-pill:hover,
@@ -895,7 +896,7 @@ section {
 }
 
 .cart-sidebar.active {
-    right: 0;
+    right: 0 !important;
 }
 
 .cart-overlay {
@@ -1708,7 +1709,7 @@ footer {
     font-size: 0.85rem;
 }
 
-/* Responsive Breakpoints */
+/* Responsive Breakpoints & Mobile Typography Fixes */
 @media (max-width: 1024px) {
     .collection-grid { grid-template-columns: repeat(2, 1fr); }
     .footer-content { grid-template-columns: 1fr 1fr; }
@@ -1737,8 +1738,11 @@ footer {
         display: block;
     }
 
-    .hero h1 { font-size: 2.8rem; }
-    .hero p { font-size: 1.1rem; }
+    /* Mobile Heading & Typography Scaling */
+    .hero h1 { font-size: 2.2rem; line-height: 1.15; word-wrap: break-word; }
+    .hero p { font-size: 1rem; }
+    .section-title { font-size: 1.8rem; }
+    .detail-info h2 { font-size: 1.4rem; }
 
     .collection-grid { grid-template-columns: 1fr; }
     .contact-cards-grid { grid-template-columns: 1fr; }
@@ -1761,7 +1765,13 @@ footer {
         text-align: center;
     }
 
+    /* Fixed Cart Sidebar Position Rule on Mobile/Tablet */
     .cart-sidebar {
         width: 100%;
+        right: -100%;
+    }
+
+    .cart-sidebar.active {
+        right: 0 !important;
     }
 }

@@ -62,9 +62,9 @@ function doPost(e) {
     } else if (action === 'createOrderAndPayment') {
       saveOrderAndPayment(ss, contents.order, contents.financialRecord);
 
-      // Send Order Confirmation Email
+      // Send Order Confirmation Email using Brevo REST API or fallback to MailApp
       if (contents.order && contents.order.customerEmail) {
-        sendOrderConfirmationEmail(contents.order);
+        sendOrderConfirmationEmail(contents.order, contents.brevoApiKey);
       }
       return jsonResponse({ status: 'success', message: 'Order and Payment logged successfully' });
     }
@@ -330,31 +330,56 @@ function fetchOrders(ss) {
 }
 
 // ----------------------------------------------------------------------------
-// EMAIL CONFIRMATION TEMPLATE (Requirement 9)
+// EMAIL CONFIRMATION TEMPLATE WITH BREVO REST API (Requirement 9)
 // ----------------------------------------------------------------------------
-function sendOrderConfirmationEmail(order) {
+function sendOrderConfirmationEmail(order, brevoApiKey) {
   try {
     var subject = "UDDIE'S CLOSET - Order Confirmation #" + order.orderId;
+    var itemsList = Array.isArray(order.items) ? order.items.join('<br> - ') : order.items;
 
-    var itemsList = Array.isArray(order.items) ? order.items.join('\n - ') : order.items;
+    var htmlContent = "<h2>Hello " + order.customerName + ",</h2>" +
+      "<p>Thank you for your order with <strong>UDDIE'S CLOSET</strong>!</p>" +
+      "<h3>Order Details</h3>" +
+      "<p><strong>Order ID:</strong> " + order.orderId + "<br>" +
+      "<strong>Payment Reference:</strong> " + order.paymentRef + "</p>" +
+      "<h3>Purchased Goods</h3>" +
+      "<p> - " + itemsList + "</p>" +
+      "<p><strong>Total Amount Paid:</strong> ₦" + Number(order.totalAmount).toLocaleString() + "</p>" +
+      "<h3>Delivery Information</h3>" +
+      "<p><strong>Delivery Type:</strong> " + order.deliveryType + "<br>" +
+      "<strong>Delivery Destination:</strong> " + order.deliveryDestination + "</p>" +
+      "<p>We are processing your order and will contact you shortly.</p>" +
+      "<p>Warm regards,<br><strong>UDDIE'S CLOSET Team</strong><br>Phone / WhatsApp: +234 802 137 5140</p>";
 
-    var body = "Hello " + order.customerName + ",\n\n" +
-      "Thank you for your order with UDDIE'S CLOSET!\n\n" +
-      "--- ORDER DETAILS ---\n" +
-      "Order ID: " + order.orderId + "\n" +
-      "Payment Reference: " + order.paymentRef + "\n\n" +
-      "--- PURCHASED GOODS ---\n" +
-      " - " + itemsList + "\n\n" +
-      "Total Amount Paid: ₦" + Number(order.totalAmount).toLocaleString() + "\n\n" +
-      "--- DELIVERY INFORMATION ---\n" +
-      "Delivery Type: " + order.deliveryType + "\n" +
-      "Delivery Destination: " + order.deliveryDestination + "\n\n" +
-      "We are processing your order and will contact you shortly.\n\n" +
-      "Warm regards,\n" +
-      "UDDIE'S CLOSET Team\n" +
-      "Phone / WhatsApp: +234 802 137 5140";
+    if (brevoApiKey && brevoApiKey.indexOf("xkeysib") === 0) {
+      var payload = {
+        sender: { name: "UDDIE'S CLOSET", email: "orders@uddiescloset.com" },
+        to: [{ email: order.customerEmail, name: order.customerName }],
+        subject: subject,
+        htmlContent: htmlContent
+      };
 
-    MailApp.sendEmail(order.customerEmail, subject, body);
+      var options = {
+        method: "post",
+        contentType: "application/json",
+        headers: {
+          "api-key": brevoApiKey,
+          "accept": "application/json"
+        },
+        payload: JSON.stringify(payload),
+        muteHttpExceptions: true
+      };
+
+      var res = UrlFetchApp.fetch("https://api.brevo.com/v3/smtp/email", options);
+      console.log("Brevo API Response: " + res.getContentText());
+    } else {
+      // Fallback to MailApp
+      MailApp.sendEmail({
+        to: order.customerEmail,
+        subject: subject,
+        htmlBody: htmlContent
+      });
+    }
   } catch (e) {
     console.warn("Could not send confirmation email: " + e.message);
   }
