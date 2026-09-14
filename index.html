@@ -3,393 +3,771 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANE - Modern Fashion & Style</title>
+    <title>UDDIE'S CLOSET - Modern Fashion & Bodywear</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Animation Background */
-        .bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .bg {
-            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
-            animation: gradient 15s ease infinite;
-        }
-
-        .bg2 {
-            background: linear-gradient(45deg, #e5e7eb, #d1d5db);
-            animation: gradient 15s ease infinite;
-            animation-delay: -5s;
-        }
-
-        .bg3 {
-            background: linear-gradient(45deg, #d1d5db, #9ca3af);
-            animation: gradient 15s ease infinite;
-            animation-delay: -10s;
-        }
-
-        @keyframes gradient {
-            0% { transform: translateX(0) translateY(0); }
-            50% { transform: translateX(50%) translateY(25%); }
-            100% { transform: translateX(0) translateY(0); }
-        }
-
-        /* Hero Section with Animation */
-        .hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            text-align: center;
-            z-index: 1;
-            animation: fadeIn 1s ease-out;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #000, #333);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGlow 2s ease-in-out infinite alternate;
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: #333;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #000, #333);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 10px rgba(0,0,0,0.2); }
-            to { text-shadow: 0 0 20px rgba(0,0,0,0.4); }
-        }
-
-        /* Clothing Animation */
-        .clothing-animation {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            opacity: 0.7;
-            perspective: 1000px;
-        }
-
-        .clothing-item {
-            position: relative;
-            width: 200px;
-            height: 300px;
-            transform-style: preserve-3d;
-            animation: float 3s ease-in-out infinite;
-            transform-origin: center center;
-        }
-
-        .clothing-item:nth-child(1) { 
-            animation-delay: 0s;
-            transform-origin: 50% 50%;
-        }
-        .clothing-item:nth-child(2) { 
-            animation-delay: -1s;
-            transform-origin: 50% 50%;
-        }
-        .clothing-item:nth-child(3) { 
-            animation-delay: -2s;
-            transform-origin: 50% 50%;
-        }
-
-        .clothing-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-            transform-style: preserve-3d;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotateY(0); }
-            50% { transform: translateY(-50px) rotateY(10deg); }
-        }
-
-        .clothing-item:hover {
-            animation-play-state: paused;
-            transform: translateY(-20px) rotateY(20deg) scale(1.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.2rem;
-            }
-
-            .clothing-animation {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .clothing-item {
-                width: 150px;
-                height: 225px;
-            }
-        }
-    </style>
 </head>
 <body>
+
+    <!-- Header Navigation -->
     <header>
         <nav>
-            <div class="logo">SANE</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#new-arrivals">New Arrivals</a></li>
+            <a href="#home" class="logo">
+                <i class="fas fa-vest-patches"></i> UDDIE'S CLOSET
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#shop">Shop</a></li>
                 <li><a href="#collections">Collections</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="#admin-section">Admin</a></li>
             </ul>
-            <div class="shopping-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count">0</span>
-            </div>
-            <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
+            <div class="nav-actions">
+                <button class="nav-admin-btn" id="open-admin-btn" title="Open Store Admin Dashboard">
+                    <i class="fas fa-lock"></i> Admin
+                </button>
+                <div class="shopping-cart" id="cart-toggle-btn" title="View Shopping Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+                <button class="burger" id="mobile-burger-btn" aria-label="Toggle Navigation">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </button>
             </div>
         </nav>
     </header>
 
+    <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="bg"></div>
-        <div class="bg bg2"></div>
-        <div class="bg bg3"></div>
-        
+        <div class="hero-bg-animated"></div>
         <div class="clothing-animation">
             <div class="clothing-item">
-                <img src="images/hero1.jpg" alt="Fashion Item 1">
+                <img src="images/hero1.jpg" alt="UDDIE'S CLOSET Fashion Item 1">
             </div>
             <div class="clothing-item">
-                <img src="images/hero2.jpg" alt="Fashion Item 2">
+                <img src="images/hero2.jpg" alt="UDDIE'S CLOSET Fashion Item 2">
             </div>
             <div class="clothing-item">
-                <img src="images/hero3.jpg" alt="Fashion Item 3">
+                <img src="images/hero3.jpg" alt="UDDIE'S CLOSET Fashion Item 3">
             </div>
         </div>
 
         <div class="hero-content">
-            <h1>SANE Fashion</h1>
-            <p>Elevate Your Style, Define Your Statement</p>
-            <a href="#new-arrivals" class="cta-button">Shop Now</a>
+            <span class="hero-badge">Exclusive Streetwear & Bodywear</span>
+            <h1>UDDIE'S CLOSET</h1>
+            <p>Elevate Your Style. Define Your Statement. Premium Fashion for the Bold.</p>
+            <a href="#shop" class="cta-button">
+                Shop Collection <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
     </section>
 
-    <section id="new-arrivals" class="products">
+    <!-- Shop / New Arrivals Section -->
+    <section id="shop" class="products">
         <div class="container">
-            <h2>New Arrivals</h2>
-            <div class="product-grid">
-                <div class="product-card">
-                    <img src="images/product1.jpg" alt="Urban Streetwear Hoodie">
-                    <div class="product-info">
-                        <h3>Urban Streetwear Hoodie</h3>
-                        <p class="price">$59.99</p>
-                        <div class="product-options">
-                            <select class="size-select">
-                                <option value="">Select Size</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                            </select>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
+            <div class="section-header">
+                <span class="section-subtitle">Curated Collection</span>
+                <h2 class="section-title">New Arrivals</h2>
+            </div>
+
+            <!-- Category & Search Filter Bar -->
+            <div class="filter-bar">
+                <div class="category-pills" id="category-pills">
+                    <button class="cat-pill active" data-cat="All">All Items</button>
+                    <button class="cat-pill" data-cat="Shirts">Shirts</button>
+                    <button class="cat-pill" data-cat="Trousers">Trousers</button>
+                    <button class="cat-pill" data-cat="Hoodies">Hoodies</button>
+                    <button class="cat-pill" data-cat="Jackets">Jackets</button>
+                    <button class="cat-pill" data-cat="Dresses">Dresses</button>
+                    <button class="cat-pill" data-cat="Tops">Tops</button>
+                    <button class="cat-pill" data-cat="Shoes">Shoes</button>
+                    <button class="cat-pill" data-cat="Bags">Bags</button>
+                    <button class="cat-pill" data-cat="Jewelry">Jewelry</button>
+                    <button class="cat-pill" data-cat="Accessories">Accessories</button>
+                    <button class="cat-pill" data-cat="Watches">Watches</button>
+                    <button class="cat-pill" data-cat="Shorts">Shorts</button>
+                    <button class="cat-pill" data-cat="Skirts">Skirts</button>
+                    <button class="cat-pill" data-cat="Other">Other</button>
                 </div>
-                <div class="product-card">
-                    <img src="images/product2.jpg" alt="Classic Denim Jacket">
-                    <div class="product-info">
-                        <h3>Classic Denim Jacket</h3>
-                        <p class="price">$79.99</p>
-                        <div class="product-options">
-                            <select class="size-select">
-                                <option value="">Select Size</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                            </select>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="product-search-input" placeholder="Search products...">
                 </div>
-                <div class="product-card">
-                    <img src="images/product3.jpg" alt="Premium Cotton T-Shirt">
-                    <div class="product-info">
-                        <h3>Premium Cotton T-Shirt</h3>
-                        <p class="price">$29.99</p>
-                        <div class="product-options">
-                            <select class="size-select">
-                                <option value="">Select Size</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                            </select>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
+            </div>
+
+            <!-- Dynamic Product Grid -->
+            <div class="product-grid" id="product-grid">
+                <!-- Products dynamically inserted via JavaScript -->
             </div>
         </div>
     </section>
 
+    <!-- Collections Section -->
     <section id="collections" class="collections">
         <div class="container">
-            <h2>Our Collections</h2>
+            <div class="section-header">
+                <span class="section-subtitle">Style Edit</span>
+                <h2 class="section-title">Featured Collections</h2>
+            </div>
             <div class="collection-grid">
                 <div class="collection-card">
-                    <img src="images/collection1.jpg" alt="Summer Collection">
-                    <div class="collection-info">
-                        <h3>Summer Collection</h3>
-                        <a href="#" class="collection-link">Shop Collection</a>
+                    <img src="images/collection1.jpg" alt="Summer Streetwear">
+                    <div class="collection-overlay">
+                        <h3>Summer Streetwear</h3>
+                        <p>Lightweight premium essentials designed for warmth and movement.</p>
+                        <a href="#shop" class="btn-collection">Explore Now</a>
                     </div>
                 </div>
                 <div class="collection-card">
-                    <img src="images/collection2.jpg" alt="Urban Style">
-                    <div class="collection-info">
-                        <h3>Urban Style</h3>
-                        <a href="#" class="collection-link">Shop Collection</a>
+                    <img src="images/collection2.jpg" alt="Urban Outerwear">
+                    <div class="collection-overlay">
+                        <h3>Urban Outerwear</h3>
+                        <p>Bold statement jackets, hoodies, and structured silhouettes.</p>
+                        <a href="#shop" class="btn-collection">Explore Now</a>
                     </div>
                 </div>
                 <div class="collection-card">
-                    <img src="images/collection3.jpg" alt="Essentials">
-                    <div class="collection-info">
-                        <h3>Essentials</h3>
-                        <a href="#" class="collection-link">Shop Collection</a>
+                    <img src="images/collection3.jpg" alt="Signature Essentials">
+                    <div class="collection-overlay">
+                        <h3>Signature Essentials</h3>
+                        <p>Timeless pieces crafted for everyday comfort and elegance.</p>
+                        <a href="#shop" class="btn-collection">Explore Now</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
-            <h2>About SANE</h2>
+            <div class="section-header">
+                <span class="section-subtitle">Our Legacy</span>
+                <h2 class="section-title">About UDDIE'S CLOSET</h2>
+            </div>
             <div class="about-content">
                 <div class="about-text">
-                    <p>SANE is a contemporary fashion brand that combines urban style with sustainable practices. Our clothing is designed for those who appreciate quality, comfort, and conscious fashion choices.</p>
+                    <p><strong>UDDIE'S CLOSET</strong> is a premier contemporary bodywear and fashion label. We blend raw streetwear aesthetic with tailored craftsmanship, creating distinctive garments that empower self-expression.</p>
+                    <p>Every piece in our catalog is thoughtfully designed using high-grade fabrics, custom cuts, and durable finishes. Whether you are dressing for daily urban life or exclusive events, UDDIE'S CLOSET delivers unparalleled style.</p>
+                    <div class="about-features">
+                        <div class="feature-box">
+                            <i class="fas fa-gem"></i>
+                            <h4>Premium Quality</h4>
+                            <p>Handpicked fabrics and meticulous stitching.</p>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-truck-fast"></i>
+                            <h4>Fast Delivery</h4>
+                            <p>Pickup, Waybill & Rider Dispatch available.</p>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-shield-halved"></i>
+                            <h4>Secure Paystack</h4>
+                            <p>100% verified encrypted payment processing.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="about-stats">
-                    <div class="stat">
-                        <h3>Sustainable</h3>
-                        <p>Eco-friendly Materials</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Quality</h3>
-                        <p>Premium Craftsmanship</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Style</h3>
-                        <p>Modern Design</p>
-                    </div>
+                <div class="about-image">
+                    <img src="images/fashion1.jpg" alt="About UDDIE'S CLOSET">
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Contact Section (No Email Form) -->
     <section id="contact" class="contact">
         <div class="container">
-            <h2>Get in Touch</h2>
-            <div class="contact-content">
-                <form class="contact-form">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Message" required></textarea>
-                    <button type="submit" class="submit-button">Send Message</button>
-                </form>
-                <div class="contact-info">
-                    <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <p>123 Fashion Street, City, Country</p>
+            <div class="section-header">
+                <span class="section-subtitle">Connect With Us</span>
+                <h2 class="section-title">Get In Touch</h2>
+            </div>
+
+            <div class="contact-cards-grid">
+                <!-- WhatsApp -->
+                <div class="contact-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fab fa-whatsapp"></i>
                     </div>
-                    <div class="info-item">
-                        <i class="fas fa-phone"></i>
-                        <p>+1 234 567 890</p>
+                    <h3>WhatsApp</h3>
+                    <p>Chat directly with our team for orders & inquiries.</p>
+                    <p><strong>+234 802 137 5140</strong></p>
+                    <a href="https://wa.me/2348021375140" target="_blank" rel="noopener" class="btn-contact-link">
+                        <i class="fab fa-whatsapp"></i> Message Us
+                    </a>
+                </div>
+
+                <!-- Instagram -->
+                <div class="contact-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fab fa-instagram"></i>
                     </div>
-                    <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <p>shop@sane.com</p>
+                    <h3>Instagram</h3>
+                    <p>Follow our latest drops, lookbooks & styling updates.</p>
+                    <p><strong>@uddiescloset</strong></p>
+                    <a href="https://instagram.com/uddiescloset" target="_blank" rel="noopener" class="btn-contact-link">
+                        <i class="fab fa-instagram"></i> Follow @uddiescloset
+                    </a>
+                </div>
+
+                <!-- TikTok -->
+                <div class="contact-card">
+                    <div class="contact-icon-wrapper">
+                        <i class="fab fa-tiktok"></i>
                     </div>
+                    <h3>TikTok</h3>
+                    <p>Watch behind-the-scenes content & new arrivals showcase.</p>
+                    <p><strong>@uddiescloset</strong></p>
+                    <a href="https://tiktok.com/@uddiescloset" target="_blank" rel="noopener" class="btn-contact-link">
+                        <i class="fab fa-tiktok"></i> View TikTok
+                    </a>
+                </div>
+            </div>
+
+            <!-- Location Banner -->
+            <div class="contact-location-bar">
+                <i class="fas fa-location-dot"></i>
+                <div class="contact-location-text">
+                    <h4>Main Store Pickup Location</h4>
+                    <p>UNIVERSITY OF PORTHARCOURT MAIN GATE, CHOBA, PORT HARCOURT</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section / Dashboard -->
+    <section id="admin-section" class="admin-section">
+        <div class="container">
+            <div class="admin-header-bar">
+                <div>
+                    <h2 style="font-size: 2rem; text-transform: uppercase;">Admin Dashboard</h2>
+                    <p style="color: var(--text-secondary);">Manage Products, Track Financials, and Process Store Orders.</p>
+                </div>
+                <div class="admin-tabs">
+                    <button class="admin-tab-btn active" data-tab="tab-products">
+                        <i class="fas fa-box-open"></i> Products
+                    </button>
+                    <button class="admin-tab-btn" data-tab="tab-finances">
+                        <i class="fas fa-wallet"></i> Payments & Finances
+                    </button>
+                    <button class="admin-tab-btn" data-tab="tab-orders">
+                        <i class="fas fa-receipt"></i> Orders
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 1: Products Management -->
+            <div class="admin-panel active" id="tab-products">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div class="search-box" style="min-width: 300px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="admin-product-search" placeholder="Search admin products by name, category, ID...">
+                    </div>
+                    <button class="cta-button" id="btn-create-product" style="padding: 0.75rem 1.5rem; font-size: 0.85rem;">
+                        <i class="fas fa-plus"></i> Add New Product
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Details</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-products-table-body">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Payments & Finances -->
+            <div class="admin-panel" id="tab-finances">
+                <!-- Summary Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #dcfce7; color: #166534;">
+                            <i class="fas fa-sack-dollar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h5>Total Revenue</h5>
+                            <div class="stat-value" id="stat-total-revenue">₦0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #e0f2fe; color: #075985;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h5>Successful Payments</h5>
+                            <div class="stat-value" id="stat-successful-count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #fef3c7; color: #92400e;">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h5>Today's Revenue</h5>
+                            <div class="stat-value" id="stat-today-revenue">₦0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #f3e8ff; color: #6b21a8;">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h5>Monthly Revenue</h5>
+                            <div class="stat-value" id="stat-monthly-revenue">₦0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #fee2e2; color: #991b1b;">
+                            <i class="fas fa-circle-xmark"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h5>Failed Transactions</h5>
+                            <div class="stat-value" id="stat-failed-count">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 1rem 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-info-circle" style="font-size: 1.2rem;"></i>
+                    <span><strong>Note:</strong> Financial Records strictly store verified successful payments. Failed or incomplete transactions are recorded separately and excluded from revenue metrics.</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Txn ID</th>
+                                <th>Order ID</th>
+                                <th>Paystack Ref</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Date / Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-finances-table-body">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Orders History -->
+            <div class="admin-panel" id="tab-orders">
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Delivery Type</th>
+                                <th>Destination</th>
+                                <th>Total</th>
+                                <th>Payment Ref</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-table-body">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Shopping Cart Sidebar -->
-    <div class="cart-sidebar">
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
         <div class="cart-header">
-            <h3>Shopping Cart</h3>
-            <button class="close-cart"><i class="fas fa-times"></i></button>
+            <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+            <button class="btn-close-cart" id="close-cart-btn"><i class="fas fa-times"></i></button>
         </div>
-        <div class="cart-items">
-            <!-- Cart items will be dynamically added here -->
+        <div class="cart-items-list" id="cart-items-container">
+            <!-- Dynamically populated -->
         </div>
-        <div class="cart-total">
-            <p>Total: <span>$0.00</span></p>
-            <button class="checkout-button">Proceed to Checkout</button>
+        <div class="cart-footer">
+            <div class="cart-summary-line">
+                <span>Total Amount:</span>
+                <span id="cart-total-amount">₦0.00</span>
+            </div>
+            <button class="btn-proceed-checkout" id="cart-checkout-btn">
+                Proceed to Checkout <i class="fas fa-arrow-right"></i>
+            </button>
         </div>
     </div>
 
+    <!-- Product Detail / Quick View Modal -->
+    <div class="modal-wrapper" id="product-detail-modal">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h3 id="modal-detail-title">Product Details</h3>
+                <button class="modal-close-btn" id="close-product-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="product-detail-layout">
+                    <div class="detail-gallery">
+                        <img src="" alt="Main Product Image" class="detail-main-img" id="modal-detail-main-img">
+                        <div class="detail-thumbs-list" id="modal-detail-thumbs"></div>
+                    </div>
+                    <div class="detail-info">
+                        <div class="detail-meta-pills">
+                            <span class="badge badge-sale" id="modal-detail-category">Category</span>
+                            <span class="badge" style="background-color: #334155;" id="modal-detail-gender">Unisex</span>
+                            <span class="badge status-active" id="modal-detail-status">In Stock</span>
+                        </div>
+                        <h2 id="modal-detail-name">Product Name</h2>
+                        <div class="detail-price-box">
+                            <span class="detail-price-main" id="modal-detail-price">₦0</span>
+                            <span class="detail-price-old" id="modal-detail-old-price"></span>
+                        </div>
+                        <p class="detail-description" id="modal-detail-desc"></p>
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label>Brand & Material</label>
+                            <p style="font-size: 0.9rem; color: var(--text-secondary);" id="modal-detail-brand-fabric"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modal-detail-size-select">Select Size <span class="required">*</span></label>
+                            <select class="form-control" id="modal-detail-size-select">
+                                <option value="">Choose a size</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modal-detail-qty">Quantity</label>
+                            <input type="number" id="modal-detail-qty" class="form-control" value="1" min="1" max="50">
+                        </div>
+
+                        <button class="btn-add-cart" id="modal-detail-add-btn" style="padding: 1rem; margin-top: 1rem;">
+                            <i class="fas fa-cart-plus"></i> Add To Shopping Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-wrapper" id="checkout-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-credit-card"></i> Complete Your Order</h3>
+                <button class="modal-close-btn" id="close-checkout-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="checkout-form">
+                    <!-- Order Summary Box -->
+                    <div class="order-summary-box">
+                        <h4 style="font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--text-secondary);">Order Breakdown</h4>
+                        <div class="summary-items-mini" id="checkout-summary-items">
+                            <!-- Populated dynamically -->
+                        </div>
+                        <div class="summary-total-row">
+                            <span>Total Payable:</span>
+                            <span id="checkout-summary-total">₦0</span>
+                        </div>
+                    </div>
+
+                    <!-- Customer Contact Details -->
+                    <div class="form-group">
+                        <label for="cust-name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="cust-name" class="form-control" placeholder="e.g. John Doe" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cust-email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="cust-email" class="form-control" placeholder="john@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cust-phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="cust-phone" class="form-control" placeholder="08012345678" required>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Type Section (Requirement 2) -->
+                    <div class="form-group">
+                        <label>Delivery Option <span class="required">*</span></label>
+                        <div class="delivery-options-grid">
+                            <label class="delivery-option-card selected" id="opt-pickup-card">
+                                <input type="radio" name="delivery_type" value="Pickup" checked>
+                                <div class="delivery-icon"><i class="fas fa-store"></i></div>
+                                <div class="delivery-title">Pickup</div>
+                                <div class="delivery-desc">Collect at PH Gate</div>
+                            </label>
+
+                            <label class="delivery-option-card" id="opt-waybill-card">
+                                <input type="radio" name="delivery_type" value="Waybill">
+                                <div class="delivery-icon"><i class="fas fa-truck-plane"></i></div>
+                                <div class="delivery-title">Waybill</div>
+                                <div class="delivery-desc">Outside State</div>
+                            </label>
+
+                            <label class="delivery-option-card" id="opt-dispatch-card">
+                                <input type="radio" name="delivery_type" value="Dispatch Rider">
+                                <div class="delivery-icon"><i class="fas fa-motorcycle"></i></div>
+                                <div class="delivery-title">Dispatch</div>
+                                <div class="delivery-desc">Within State</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Delivery Address Input -->
+                    <div class="form-group">
+                        <label for="cust-address">Delivery Address / Destination <span class="required">*</span></label>
+                        <textarea id="cust-address" class="form-control" readonly required>UNIVERSITY OF PORTHARCOURT MAIN GATE, CHOBA, PORT HARCOURT</textarea>
+                        <small id="delivery-address-help" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem; display: block;">
+                            Read-only pickup point for store collection.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cust-notes">Additional Notes (Optional)</label>
+                        <input type="text" id="cust-notes" class="form-control" placeholder="e.g. Call before delivery, preferred color tint, etc.">
+                    </div>
+
+                    <!-- Paystack Submit Button -->
+                    <button type="submit" class="btn-proceed-checkout" id="paystack-submit-btn" style="margin-top: 1.5rem; background-color: var(--accent-green);">
+                        <i class="fas fa-lock"></i> Pay Now with Paystack
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Product Modal (Create / Edit) -->
+    <div class="modal-wrapper" id="admin-product-modal">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h3 id="admin-modal-title">Create New Product</h3>
+                <button class="modal-close-btn" id="close-admin-product-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="admin-product-form">
+                    <input type="hidden" id="admin-form-product-id">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="p-name">Product Name <span class="required">*</span></label>
+                            <input type="text" id="p-name" class="form-control" placeholder="e.g. Oversized Heavyweight Tee" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p-category">Category <span class="required">*</span></label>
+                            <select id="p-category" class="form-control" required>
+                                <option value="Shirts">Shirts</option>
+                                <option value="Trousers">Trousers</option>
+                                <option value="Shoes">Shoes</option>
+                                <option value="Bags">Bags</option>
+                                <option value="Jewelry">Jewelry</option>
+                                <option value="Dresses">Dresses</option>
+                                <option value="Tops">Tops</option>
+                                <option value="Jackets">Jackets</option>
+                                <option value="Hoodies">Hoodies</option>
+                                <option value="Shorts">Shorts</option>
+                                <option value="Skirts">Skirts</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Watches">Watches</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="p-subcategory">Subcategory</label>
+                            <input type="text" id="p-subcategory" class="form-control" placeholder="e.g. Graphic Tees, Cargo, Denim">
+                        </div>
+                        <div class="form-group">
+                            <label for="p-brand">Brand</label>
+                            <input type="text" id="p-brand" class="form-control" value="UDDIE'S CLOSET">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="p-price">Price (₦) <span class="required">*</span></label>
+                            <input type="number" id="p-price" class="form-control" placeholder="e.g. 25000" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p-discount-price">Discount / Sale Price (₦)</label>
+                            <input type="number" id="p-discount-price" class="form-control" placeholder="e.g. 20000" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="p-stock">Stock / Quantity <span class="required">*</span></label>
+                            <input type="number" id="p-stock" class="form-control" value="10" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="p-gender">Gender</label>
+                            <select id="p-gender" class="form-control">
+                                <option value="Unisex">Unisex</option>
+                                <option value="Men">Men</option>
+                                <option value="Women">Women</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="p-material">Material / Fabric</label>
+                            <input type="text" id="p-material" class="form-control" placeholder="e.g. 100% French Terry Cotton">
+                        </div>
+                        <div class="form-group">
+                            <label for="p-status">Status <span class="required">*</span></label>
+                            <select id="p-status" class="form-control" required>
+                                <option value="Active">Active</option>
+                                <option value="Out of Stock">Out of Stock</option>
+                                <option value="Draft">Draft</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="p-sizes">Available Sizes (Comma-separated)</label>
+                        <input type="text" id="p-sizes" class="form-control" placeholder="e.g. XS, S, M, L, XL, XXL or 40, 41, 42, 43, 44">
+                        <small style="color: var(--text-muted); font-size: 0.8rem;">Supports clothing sizes (XS, S, M, L, XL) or shoe sizes (38, 39, 40...)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="p-colors">Available Colors (Comma-separated)</label>
+                        <input type="text" id="p-colors" class="form-control" placeholder="e.g. Onyx Black, Vintage White, Olive">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="p-description">Product Description</label>
+                        <textarea id="p-description" class="form-control" placeholder="Provide details about fit, design, and styling tips..."></textarea>
+                    </div>
+
+                    <!-- Multiple Image URLs Manager -->
+                    <div class="form-group">
+                        <label>Product Images (Image URLs) <span class="required">*</span></label>
+                        <div class="images-input-list" id="p-images-container">
+                            <!-- Image input rows added dynamically -->
+                        </div>
+                        <button type="button" class="btn-action-sm btn-edit" id="btn-add-image-url">
+                            <i class="fas fa-plus"></i> Add Another Image URL
+                        </button>
+                    </div>
+
+                    <div class="form-row" style="align-items: center; margin-top: 1rem;">
+                        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0;">
+                            <input type="checkbox" id="p-featured" style="width: 18px; height: 18px;">
+                            <label for="p-featured" style="margin-bottom: 0; cursor: pointer;">Featured Product</label>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="p-tags">Tags (Comma-separated)</label>
+                            <input type="text" id="p-tags" class="form-control" placeholder="e.g. trending, summer, vintage">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                        <button type="button" class="btn-action-sm btn-edit" id="cancel-admin-modal-btn" style="padding: 0.75rem 1.5rem; font-size: 0.9rem;">Cancel</button>
+                        <button type="submit" class="btn-proceed-checkout" id="save-product-submit-btn" style="width: auto; padding: 0.75rem 2rem;">Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Status / Receipt Confirmation Modal -->
+    <div class="modal-wrapper" id="payment-result-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="result-modal-header-title">Payment Status</h3>
+                <button class="modal-close-btn" id="close-result-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="result-modal-content" style="text-align: center; padding: 2rem 1.5rem;">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo">SANE</div>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                <div class="footer-brand">
+                    <a href="#home" class="logo">
+                        <i class="fas fa-vest-patches"></i> UDDIE'S CLOSET
+                    </a>
+                    <p>Contemporary bodywear and streetwear brand defined by quality, innovation, and statement design.</p>
+                    <div class="social-links">
+                        <a href="https://wa.me/2348021375140" target="_blank" rel="noopener" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://instagram.com/uddiescloset" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://tiktok.com/@uddiescloset" target="_blank" rel="noopener" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#shop">Shop Collection</a></li>
+                        <li><a href="#collections">Featured Edits</a></li>
+                        <li><a href="#about">Our Story</a></li>
+                        <li><a href="#contact">Contact & Socials</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Delivery & Info</h4>
+                    <ul>
+                        <li><a href="#shop">Pickup (Choba Main Gate)</a></li>
+                        <li><a href="#shop">Waybill (Interstate)</a></li>
+                        <li><a href="#shop">Dispatch Rider (Intrastate)</a></li>
+                        <li><a href="#shop">Paystack Encrypted Payments</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +234 802 137 5140</li>
+                        <li><i class="fab fa-instagram"></i> @uddiescloset</li>
+                        <li><i class="fab fa-tiktok"></i> @uddiescloset</li>
+                        <li><i class="fas fa-location-dot"></i> Port Harcourt, Nigeria</li>
+                    </ul>
                 </div>
             </div>
+
             <div class="footer-bottom">
-                <p>&copy; 2024 SANE. All rights reserved.</p>
+                <p>&copy; 2024 UDDIE'S CLOSET. All Rights Reserved. Crafted for fashion enthusiasts.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Configuration and Paystack Inline Scripts -->
+    <script src="env.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
