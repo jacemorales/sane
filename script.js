@@ -8,140 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------------
     const config = window.CONFIG || {
         PAYSTACK_PUBLIC_KEY: 'pk_test_your_paystack_public_key_here',
-        APPS_SCRIPT_URL: ''
+        BREVO_API_KEY: '',
+        APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzqWSIfnP1wbG9kzJA4XVgZXUJuqlmpXAjA--2FqZNQB13tMg9fT3JtuGjaZ6hX01bh3g/exec'
     };
 
-    // Default Initial Products (Fallback when GAS URL is not configured or network offline)
-    const initialProducts = [
-        {
-            id: 'PROD-101',
-            name: 'Urban Oversized Heavyweight Tee',
-            category: 'Shirts',
-            subcategory: 'Graphic Tees',
-            description: 'Heavyweight 240GSM combed cotton vintage streetwear graphic tee with signature boxy fit and ribbed neckband.',
-            price: 18500,
-            discountPrice: 15000,
-            stock: 25,
-            sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-            colors: ['Onyx Black', 'Vintage Cream'],
-            brand: "UDDIE'S CLOSET",
-            gender: 'Unisex',
-            material: '100% French Cotton',
-            images: ['images/product1.jpg', 'images/hero1.jpg'],
-            featured: true,
-            status: 'Active',
-            tags: 'streetwear, graphic, tee, new',
-            dateAdded: '2024-01-15',
-            lastUpdated: '2024-01-15'
-        },
-        {
-            id: 'PROD-102',
-            name: 'Classic Vintage Denim Jacket',
-            category: 'Jackets',
-            subcategory: 'Outerwear',
-            description: 'Custom washed rigid denim jacket featuring branded hardware, dual chest pockets, and relaxed streetwear fit.',
-            price: 35000,
-            discountPrice: 32000,
-            stock: 12,
-            sizes: ['S', 'M', 'L', 'XL'],
-            colors: ['Washed Indigo'],
-            brand: "UDDIE'S CLOSET",
-            gender: 'Unisex',
-            material: '100% Heavy Denim',
-            images: ['images/product2.jpg', 'images/hero2.jpg'],
-            featured: true,
-            status: 'Active',
-            tags: 'jacket, denim, outerwear',
-            dateAdded: '2024-01-16',
-            lastUpdated: '2024-01-16'
-        },
-        {
-            id: 'PROD-103',
-            name: 'Essential Street Hoodie',
-            category: 'Hoodies',
-            subcategory: 'Sweatshirts',
-            description: 'Ultra-soft fleece lined hoodie with double-layer hood, kangaroo pocket, and minimal tone-on-tone embroidery.',
-            price: 28000,
-            discountPrice: 24000,
-            stock: 18,
-            sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-            colors: ['Charcoal Gray', 'Jet Black'],
-            brand: "UDDIE'S CLOSET",
-            gender: 'Unisex',
-            material: '80% Cotton / 20% Polyester Fleece',
-            images: ['images/product3.jpg', 'images/hero3.jpg'],
-            featured: true,
-            status: 'Active',
-            tags: 'hoodie, fleece, essential',
-            dateAdded: '2024-01-18',
-            lastUpdated: '2024-01-18'
-        },
-        {
-            id: 'PROD-104',
-            name: 'Tactical Cargo Trousers',
-            category: 'Trousers',
-            subcategory: 'Bottoms',
-            description: 'Multi-pocket utility cargo trousers with adjustable drawstring ankles and elastic waist for comfort.',
-            price: 26500,
-            discountPrice: null,
-            stock: 15,
-            sizes: ['S', 'M', 'L', 'XL'],
-            colors: ['Olive Drab', 'Black'],
-            brand: "UDDIE'S CLOSET",
-            gender: 'Unisex',
-            material: 'Ripstop Cotton Blend',
-            images: ['images/collection2.jpg', 'images/fashion2.jpg'],
-            featured: false,
-            status: 'Active',
-            tags: 'cargo, trousers, utility',
-            dateAdded: '2024-01-20',
-            lastUpdated: '2024-01-20'
-        },
-        {
-            id: 'PROD-105',
-            name: 'Chunky Leather Sneakers',
-            category: 'Shoes',
-            subcategory: 'Footwear',
-            description: 'Bold retro chunky sole sneakers with genuine leather overlays and cushioned ergonomic insoles.',
-            price: 45000,
-            discountPrice: 40000,
-            stock: 8,
-            sizes: ['40', '41', '42', '43', '44', '45'],
-            colors: ['Triple White', 'Black/Red'],
-            brand: "UDDIE'S CLOSET",
-            gender: 'Unisex',
-            material: 'Genuine Leather & Rubber Sole',
-            images: ['images/fashion1.jpg', 'images/product1.jpg'],
-            featured: true,
-            status: 'Active',
-            tags: 'sneakers, shoes, footwear',
-            dateAdded: '2024-01-22',
-            lastUpdated: '2024-01-22'
-        },
-        {
-            id: 'PROD-106',
-            name: 'Minimalist Leather Crossbody Bag',
-            category: 'Bags',
-            subcategory: 'Accessories',
-            description: 'Sleek compact crossbody bag crafted from vegan leather with matte black metal zippers.',
-            price: 16000,
-            discountPrice: null,
-            stock: 20,
-            sizes: ['One Size'],
-            colors: ['Matte Black'],
-            brand: "UDDIE'S CLOSET",
-            gender: 'Unisex',
-            material: 'PU Vegan Leather',
-            images: ['images/collection3.jpg', 'images/hero1.jpg'],
-            featured: false,
-            status: 'Active',
-            tags: 'bag, accessory, leather',
-            dateAdded: '2024-01-25',
-            lastUpdated: '2024-01-25'
-        }
-    ];
-
-    let storeProducts = JSON.parse(localStorage.getItem('uddies_products')) || initialProducts;
+    let storeProducts = JSON.parse(localStorage.getItem('uddies_products')) || [];
 
     // Shopping Cart State
     let cart = JSON.parse(localStorage.getItem('uddies_cart')) || [];
@@ -257,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(`${config.APPS_SCRIPT_URL}?action=getProducts`);
             if (res.ok) {
                 const data = await res.json();
-                if (data && data.status === 'success' && Array.isArray(data.products) && data.products.length > 0) {
+                if (data && data.status === 'success' && Array.isArray(data.products)) {
                     storeProducts = data.products;
                     saveToLocalStorage();
                 }
@@ -279,7 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     action: 'createOrderAndPayment',
                     order: orderData,
-                    financialRecord: financialRecord
+                    financialRecord: financialRecord,
+                    brevoApiKey: config.BREVO_API_KEY || ''
                 })
             });
             console.log("Order & Payment synced with Google Apps Script backend.");
@@ -308,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ----------------------------------------------------------------------
-    // 6. Store Front Rendering & Filtering
+    // 6. Store Front Rendering & Responsive Set/Unset Filter Handler
     // ----------------------------------------------------------------------
     function renderProducts() {
         if (!productGrid) return;
@@ -317,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const filtered = storeProducts.filter(p => {
             if (p.status !== 'Active' && p.status !== 'Out of Stock') return false;
 
-            const matchCategory = (currentCategoryFilter === 'All') ||
+            const matchCategory = (currentCategoryFilter.toLowerCase() === 'all') ||
                 (p.category && p.category.toLowerCase() === currentCategoryFilter.toLowerCase());
 
             const matchSearch = !currentSearchTerm ||
@@ -345,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const displayPrice = product.discountPrice ? product.discountPrice : product.price;
             const hasDiscount = Boolean(product.discountPrice && product.discountPrice < product.price);
-            const mainImg = (Array.isArray(product.images) && product.images.length > 0) ? product.images[0] : 'images/product1.jpg';
+            const mainImg = (Array.isArray(product.images) && product.images.length > 0 && product.images[0]) ? product.images[0] : 'images/product1.jpg';
             const isOutOfStock = product.stock <= 0 || product.status === 'Out of Stock';
 
             const sizesArr = Array.isArray(product.sizes) ? product.sizes :
@@ -405,13 +277,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Category Pill Filters
+    // Category Pill Filters (Responsive Set and Unset Filter Handler)
     if (categoryPillsContainer) {
         categoryPillsContainer.querySelectorAll('.cat-pill').forEach(btn => {
             btn.addEventListener('click', () => {
-                categoryPillsContainer.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategoryFilter = btn.dataset.cat || 'All';
+                const targetCat = btn.dataset.cat || 'All';
+
+                if (btn.classList.contains('active')) {
+                    if (targetCat.toLowerCase() !== 'all') {
+                        // Unset filter and reset to All
+                        categoryPillsContainer.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+                        const allPill = categoryPillsContainer.querySelector('.cat-pill[data-cat="All"]');
+                        if (allPill) allPill.classList.add('active');
+                        currentCategoryFilter = 'All';
+                    }
+                } else {
+                    // Set category filter
+                    categoryPillsContainer.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategoryFilter = targetCat;
+                }
+
                 renderProducts();
             });
         });
@@ -432,16 +318,16 @@ document.addEventListener('DOMContentLoaded', () => {
         activeDetailProduct = product;
         const images = Array.isArray(product.images) && product.images.length > 0 ? product.images : ['images/product1.jpg'];
 
-        modalDetailMainImg.src = images[0];
+        modalDetailMainImg.src = images[0] || 'images/product1.jpg';
         modalDetailThumbs.innerHTML = '';
 
         images.forEach((imgUrl, index) => {
             const thumb = document.createElement('img');
-            thumb.src = imgUrl;
+            thumb.src = imgUrl || 'images/product1.jpg';
             thumb.className = `detail-thumb ${index === 0 ? 'active' : ''}`;
             thumb.onerror = () => { thumb.src = 'images/product1.jpg'; };
             thumb.addEventListener('click', () => {
-                modalDetailMainImg.src = imgUrl;
+                modalDetailMainImg.src = imgUrl || 'images/product1.jpg';
                 modalDetailThumbs.querySelectorAll('.detail-thumb').forEach(t => t.classList.remove('active'));
                 thumb.classList.add('active');
             });
@@ -519,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addToCart(product, size, qty = 1) {
         const unitPrice = product.discountPrice ? product.discountPrice : product.price;
-        const mainImg = (Array.isArray(product.images) && product.images.length > 0) ? product.images[0] : 'images/product1.jpg';
+        const mainImg = (Array.isArray(product.images) && product.images.length > 0 && product.images[0]) ? product.images[0] : 'images/product1.jpg';
 
         const existingIndex = cart.findIndex(item => item.id === product.id && item.size === size);
 

@@ -1,10 +1,13 @@
-// Environment Configuration Example for UDDIE'S CLOSET
-// Copy this file to env.js and fill in your real credentials.
+// Environment Configuration Template for UDDIE'S CLOSET
+// Copy or rename this file to env.js and fill in your actual credentials
 
 window.CONFIG = {
     // Paystack Public Key (Obtain from your Paystack Dashboard: Settings > API Keys & Webhooks)
     PAYSTACK_PUBLIC_KEY: "pk_test_your_paystack_public_key_here",
 
+    // Brevo API Key (Obtain from Brevo > SMTP & API > API Keys)
+    BREVO_API_KEY: "xkeysib-your_brevo_api_key_here",
+
     // Google Apps Script Web App URL (Deployed Apps Script Executable URL)
-    APPS_SCRIPT_URL: "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec"
+    APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzqWSIfnP1wbG9kzJA4XVgZXUJuqlmpXAjA--2FqZNQB13tMg9fT3JtuGjaZ6hX01bh3g/exec"
 };
