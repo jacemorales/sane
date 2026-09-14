@@ -1,5 +1,5 @@
 /* ==========================================================================
-   UDDIE'S CLOSET - Main JavaScript Application Logic
+   UDDIE'S CLOSET - Main Storefront JavaScript Application Logic
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -142,9 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let storeProducts = JSON.parse(localStorage.getItem('uddies_products')) || initialProducts;
-    let storeOrders = JSON.parse(localStorage.getItem('uddies_orders')) || [];
-    let financialRecords = JSON.parse(localStorage.getItem('uddies_finances')) || [];
-    let failedTxnCount = parseInt(localStorage.getItem('uddies_failed_count') || '0', 10);
 
     // Shopping Cart State
     let cart = JSON.parse(localStorage.getItem('uddies_cart')) || [];
@@ -161,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------------
     const navLinks = document.getElementById('nav-links');
     const burgerBtn = document.getElementById('mobile-burger-btn');
-    const openAdminBtn = document.getElementById('open-admin-btn');
     
     // Cart Elements
     const cartToggleBtn = document.getElementById('cart-toggle-btn');
@@ -195,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalDetailQty = document.getElementById('modal-detail-qty');
     const modalDetailAddBtn = document.getElementById('modal-detail-add-btn');
 
-    // Checkout Modal & Form (Requirements 1 & 2)
+    // Checkout Modal & Form
     const checkoutModal = document.getElementById('checkout-modal');
     const closeCheckoutModalBtn = document.getElementById('close-checkout-modal');
     const checkoutForm = document.getElementById('checkout-form');
@@ -204,29 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const custAddressInput = document.getElementById('cust-address');
     const deliveryAddressHelp = document.getElementById('delivery-address-help');
     const paystackSubmitBtn = document.getElementById('paystack-submit-btn');
-
-    // Admin Dashboard Elements
-    const adminProductsTableBody = document.getElementById('admin-products-table-body');
-    const adminFinancesTableBody = document.getElementById('admin-finances-table-body');
-    const adminOrdersTableBody = document.getElementById('admin-orders-table-body');
-    const adminProductSearchInput = document.getElementById('admin-product-search');
-    const btnCreateProduct = document.getElementById('btn-create-product');
-
-    // Admin Stat Elements
-    const statTotalRevenue = document.getElementById('stat-total-revenue');
-    const statSuccessfulCount = document.getElementById('stat-successful-count');
-    const statTodayRevenue = document.getElementById('stat-today-revenue');
-    const statMonthlyRevenue = document.getElementById('stat-monthly-revenue');
-    const statFailedCount = document.getElementById('stat-failed-count');
-
-    // Admin Product Create/Edit Modal
-    const adminProductModal = document.getElementById('admin-product-modal');
-    const closeAdminProductModalBtn = document.getElementById('close-admin-product-modal');
-    const cancelAdminModalBtn = document.getElementById('cancel-admin-modal-btn');
-    const adminProductForm = document.getElementById('admin-product-form');
-    const adminModalTitle = document.getElementById('admin-modal-title');
-    const pImagesContainer = document.getElementById('p-images-container');
-    const btnAddImageUrl = document.getElementById('btn-add-image-url');
 
     // Result Modal
     const paymentResultModal = document.getElementById('payment-result-modal');
@@ -267,9 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Save Store Data to Local Storage
     function saveToLocalStorage() {
         localStorage.setItem('uddies_products', JSON.stringify(storeProducts));
-        localStorage.setItem('uddies_orders', JSON.stringify(storeOrders));
-        localStorage.setItem('uddies_finances', JSON.stringify(financialRecords));
-        localStorage.setItem('uddies_failed_count', failedTxnCount.toString());
         localStorage.setItem('uddies_cart', JSON.stringify(cart));
     }
 
@@ -280,7 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!config.APPS_SCRIPT_URL) {
             console.log("Apps Script URL not set. Using local product storage.");
             renderProducts();
-            renderAdminProducts();
             return;
         }
 
@@ -297,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn("Could not fetch products from Google Apps Script endpoint:", err);
         } finally {
             renderProducts();
-            renderAdminProducts();
         }
     }
 
@@ -307,8 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await fetch(config.APPS_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
                     action: 'createOrderAndPayment',
                     order: orderData,
@@ -331,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', (e) => {
+        link.addEventListener('click', () => {
             document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
             link.classList.add('active');
             if (navLinks.classList.contains('active')) {
@@ -339,15 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    if (openAdminBtn) {
-        openAdminBtn.addEventListener('click', () => {
-            const adminSec = document.getElementById('admin-section');
-            if (adminSec) {
-                adminSec.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    }
 
     // ----------------------------------------------------------------------
     // 6. Store Front Rendering & Filtering
@@ -473,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function openProductDetailModal(product) {
         activeDetailProduct = product;
         const images = Array.isArray(product.images) && product.images.length > 0 ? product.images : ['images/product1.jpg'];
-        
+
         modalDetailMainImg.src = images[0];
         modalDetailThumbs.innerHTML = '';
 
@@ -660,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------------------------------------
-    // 9. Delivery Type & Checkout Modal (Requirements 1 & 2)
+    // 9. Delivery Type & Checkout Modal
     // ----------------------------------------------------------------------
     const PICKUP_ADDRESS = "UNIVERSITY OF PORTHARCOURT MAIN GATE, CHOBA, PORT HARCOURT";
 
@@ -732,7 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------------------------------------
-    // 10. Paystack Payment Integration & Handler (Requirement 1 & 13)
+    // 10. Paystack Payment Integration & Handler
     // ----------------------------------------------------------------------
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', (e) => {
@@ -769,10 +727,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Check Paystack Key
             const paystackKey = (config && config.PAYSTACK_PUBLIC_KEY) ? config.PAYSTACK_PUBLIC_KEY : '';
-
-            if (!paystackKey || paystackKey.includes('your_paystack_public_key')) {
-                showToast('Paystack Public Key is missing or default test placeholder. Using simulated payment test mode.', 'info');
-            }
 
             // Disable Submit Button to Prevent Duplicate Submissions
             paystackSubmitBtn.disabled = true;
@@ -813,7 +767,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             delivery_destination: address
                         },
                         callback: function (response) {
-                            // Verified Callback from Paystack
                             if (response && (response.status === 'success' || response.message === 'Approved')) {
                                 handleSuccessfulPayment(orderPayload, response);
                             } else {
@@ -821,15 +774,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         },
                         onClose: function () {
-                            // Payment Window Closed / Cancelled
                             paystackSubmitBtn.disabled = false;
                             paystackSubmitBtn.innerHTML = `<i class="fas fa-lock"></i> Pay Now with Paystack`;
                             showToast('Payment window closed. Order was not completed.', 'info');
-
-                            // Increment failed/cancelled tracking counter without saving financial record
-                            failedTxnCount++;
-                            saveToLocalStorage();
-                            renderAdminFinances();
                         }
                     });
 
@@ -861,10 +808,6 @@ document.addEventListener('DOMContentLoaded', () => {
         orderPayload.orderStatus = 'Confirmed';
         orderPayload.paymentRef = paystackResponse.reference || orderPayload.paymentRef;
 
-        // Store Order
-        storeOrders.unshift(orderPayload);
-
-        // Record ONLY Successful Payment into Financial Records (Requirement 8)
         const financialRecord = {
             transactionId: paystackResponse.trans || `TXN-${Date.now()}`,
             orderId: orderPayload.orderId,
@@ -875,9 +818,6 @@ document.addEventListener('DOMContentLoaded', () => {
             customerRef: `${orderPayload.customerName} (${orderPayload.customerEmail})`,
             dateTime: new Date().toLocaleString()
         };
-
-        financialRecords.unshift(financialRecord);
-        saveToLocalStorage();
 
         // Sync with Google Apps Script Backend
         sendOrderToBackend(orderPayload, financialRecord);
@@ -893,10 +833,6 @@ document.addEventListener('DOMContentLoaded', () => {
         paystackSubmitBtn.innerHTML = `<i class="fas fa-lock"></i> Pay Now with Paystack`;
         checkoutForm.reset();
 
-        // Render Admin Views
-        renderAdminFinances();
-        renderAdminOrders();
-
         // Display Success Modal
         showPaymentResultModal(true, orderPayload, financialRecord);
     }
@@ -904,11 +840,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFailedPayment(orderPayload, errorMsg) {
         paystackSubmitBtn.disabled = false;
         paystackSubmitBtn.innerHTML = `<i class="fas fa-lock"></i> Pay Now with Paystack`;
-        
-        failedTxnCount++;
-        saveToLocalStorage();
-        renderAdminFinances();
-
         showPaymentResultModal(false, orderPayload, null, errorMsg);
     }
 
@@ -973,407 +904,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------------------------------------
-    // 11. Admin Dashboard & Product CRUD Management (Requirements 3, 4, 5, 8)
-    // ----------------------------------------------------------------------
-    // Admin Tabs Toggle
-    document.querySelectorAll('.admin-tab-btn').forEach(tabBtn => {
-        tabBtn.addEventListener('click', () => {
-            document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-
-            tabBtn.classList.add('active');
-            const targetId = tabBtn.dataset.tab;
-            const targetPanel = document.getElementById(targetId);
-            if (targetPanel) targetPanel.classList.add('active');
-        });
-    });
-
-    // Render Admin Products Table
-    function renderAdminProducts() {
-        if (!adminProductsTableBody) return;
-        adminProductsTableBody.innerHTML = '';
-
-        const filterTerm = (adminProductSearchInput ? adminProductSearchInput.value : '').toLowerCase().trim();
-
-        const filtered = storeProducts.filter(p => {
-            if (!filterTerm) return true;
-            return (p.name && p.name.toLowerCase().includes(filterTerm)) ||
-                (p.category && p.category.toLowerCase().includes(filterTerm)) ||
-                (p.id && p.id.toLowerCase().includes(filterTerm));
-        });
-
-        if (filtered.length === 0) {
-            adminProductsTableBody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No products match your filter.</td>
-                </tr>
-            `;
-            return;
-        }
-
-        filtered.forEach(p => {
-            const tr = document.createElement('tr');
-            const mainImg = (Array.isArray(p.images) && p.images.length > 0) ? p.images[0] : 'images/product1.jpg';
-            const displayPrice = p.discountPrice ? p.discountPrice : p.price;
-
-            let statusClass = 'status-active';
-            if (p.status === 'Out of Stock') statusClass = 'status-out';
-            if (p.status === 'Draft') statusClass = 'status-draft';
-
-            tr.innerHTML = `
-                <td>
-                    <img src="${mainImg}" alt="${p.name}" class="table-thumb" onerror="this.src='images/product1.jpg'">
-                </td>
-                <td>
-                    <strong>${p.name}</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">ID: ${p.id}</div>
-                </td>
-                <td><span class="badge" style="background-color: #334155;">${p.category || 'General'}</span></td>
-                <td>
-                    <strong>${formatNaira(displayPrice)}</strong>
-                    ${p.discountPrice ? `<div style="font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through;">${formatNaira(p.price)}</div>` : ''}
-                </td>
-                <td><strong>${p.stock}</strong> units</td>
-                <td><span class="status-badge ${statusClass}">${p.status}</span></td>
-                <td>
-                    <div class="table-actions">
-                        <button class="btn-action-sm btn-edit btn-admin-edit" data-id="${p.id}"><i class="fas fa-pen"></i> Edit</button>
-                        <button class="btn-action-sm btn-delete btn-admin-delete" data-id="${p.id}"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                </td>
-            `;
-
-            tr.querySelector('.btn-admin-edit').addEventListener('click', () => openAdminProductModal(p));
-            tr.querySelector('.btn-admin-delete').addEventListener('click', () => deleteProduct(p.id));
-
-            adminProductsTableBody.appendChild(tr);
-        });
-    }
-
-    if (adminProductSearchInput) {
-        adminProductSearchInput.addEventListener('input', renderAdminProducts);
-    }
-
-    // Dynamic Image URL Inputs in Admin Form
-    function renderImageInputs(imageUrlsArray = ['']) {
-        if (!pImagesContainer) return;
-        pImagesContainer.innerHTML = '';
-
-        if (imageUrlsArray.length === 0) imageUrlsArray = [''];
-
-        imageUrlsArray.forEach((url, idx) => {
-            const row = document.createElement('div');
-            row.className = 'image-input-row';
-            row.innerHTML = `
-                <img src="${url || 'images/product1.jpg'}" class="image-input-preview" onerror="this.src='images/product1.jpg'">
-                <input type="url" class="form-control p-image-url-input" placeholder="https://example.com/image.jpg or images/item.jpg" value="${url}">
-                ${idx > 0 ? `<button type="button" class="btn-action-sm btn-delete btn-remove-img-url"><i class="fas fa-minus"></i></button>` : ''}
-            `;
-
-            const inputEl = row.querySelector('.p-image-url-input');
-            const previewEl = row.querySelector('.image-input-preview');
-
-            inputEl.addEventListener('input', () => {
-                previewEl.src = inputEl.value.trim() || 'images/product1.jpg';
-            });
-
-            const removeBtn = row.querySelector('.btn-remove-img-url');
-            if (removeBtn) {
-                removeBtn.addEventListener('click', () => row.remove());
-            }
-
-            pImagesContainer.appendChild(row);
-        });
-    }
-
-    if (btnAddImageUrl) {
-        btnAddImageUrl.addEventListener('click', () => {
-            const row = document.createElement('div');
-            row.className = 'image-input-row';
-            row.innerHTML = `
-                <img src="images/product1.jpg" class="image-input-preview">
-                <input type="url" class="form-control p-image-url-input" placeholder="https://example.com/image.jpg or images/item.jpg">
-                <button type="button" class="btn-action-sm btn-delete btn-remove-img-url"><i class="fas fa-minus"></i></button>
-            `;
-            const inputEl = row.querySelector('.p-image-url-input');
-            const previewEl = row.querySelector('.image-input-preview');
-
-            inputEl.addEventListener('input', () => {
-                previewEl.src = inputEl.value.trim() || 'images/product1.jpg';
-            });
-
-            row.querySelector('.btn-remove-img-url').addEventListener('click', () => row.remove());
-            pImagesContainer.appendChild(row);
-        });
-    }
-
-    // Open Admin Product Modal for Create / Edit
-    function openAdminProductModal(productToEdit = null) {
-        if (!adminProductModal) return;
-
-        if (productToEdit) {
-            adminModalTitle.textContent = `Edit Product: ${productToEdit.name}`;
-            document.getElementById('admin-form-product-id').value = productToEdit.id;
-            document.getElementById('p-name').value = productToEdit.name || '';
-            document.getElementById('p-category').value = productToEdit.category || 'Shirts';
-            document.getElementById('p-subcategory').value = productToEdit.subcategory || '';
-            document.getElementById('p-brand').value = productToEdit.brand || "UDDIE'S CLOSET";
-            document.getElementById('p-price').value = productToEdit.price || '';
-            document.getElementById('p-discount-price').value = productToEdit.discountPrice || '';
-            document.getElementById('p-stock').value = productToEdit.stock !== undefined ? productToEdit.stock : 10;
-            document.getElementById('p-gender').value = productToEdit.gender || 'Unisex';
-            document.getElementById('p-material').value = productToEdit.material || '';
-            document.getElementById('p-status').value = productToEdit.status || 'Active';
-
-            const sizesStr = Array.isArray(productToEdit.sizes) ? productToEdit.sizes.join(', ') : (productToEdit.sizes || '');
-            document.getElementById('p-sizes').value = sizesStr;
-
-            const colorsStr = Array.isArray(productToEdit.colors) ? productToEdit.colors.join(', ') : (productToEdit.colors || '');
-            document.getElementById('p-colors').value = colorsStr;
-
-            document.getElementById('p-description').value = productToEdit.description || '';
-            document.getElementById('p-featured').checked = Boolean(productToEdit.featured);
-            document.getElementById('p-tags').value = productToEdit.tags || '';
-
-            const imagesArr = Array.isArray(productToEdit.images) ? productToEdit.images : [productToEdit.images || 'images/product1.jpg'];
-            renderImageInputs(imagesArr);
-        } else {
-            adminModalTitle.textContent = 'Create New Product';
-            adminProductForm.reset();
-            document.getElementById('admin-form-product-id').value = '';
-            document.getElementById('p-brand').value = "UDDIE'S CLOSET";
-            document.getElementById('p-stock').value = 10;
-            renderImageInputs(['images/product1.jpg']);
-        }
-
-        adminProductModal.classList.add('active');
-    }
-
-    if (btnCreateProduct) {
-        btnCreateProduct.addEventListener('click', () => openAdminProductModal(null));
-    }
-
-    if (closeAdminProductModalBtn) {
-        closeAdminProductModalBtn.addEventListener('click', () => adminProductModal.classList.remove('active'));
-    }
-
-    if (cancelAdminModalBtn) {
-        cancelAdminModalBtn.addEventListener('click', () => adminProductModal.classList.remove('active'));
-    }
-
-    // Save Product Form Handler (Create or Update)
-    if (adminProductForm) {
-        adminProductForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const existingId = document.getElementById('admin-form-product-id').value;
-            const name = document.getElementById('p-name').value.trim();
-            const category = document.getElementById('p-category').value;
-            const subcategory = document.getElementById('p-subcategory').value.trim();
-            const brand = document.getElementById('p-brand').value.trim() || "UDDIE'S CLOSET";
-            const price = parseFloat(document.getElementById('p-price').value);
-            const discountVal = document.getElementById('p-discount-price').value;
-            const discountPrice = discountVal ? parseFloat(discountVal) : null;
-            const stock = parseInt(document.getElementById('p-stock').value, 10);
-            const gender = document.getElementById('p-gender').value;
-            const material = document.getElementById('p-material').value.trim();
-            const status = document.getElementById('p-status').value;
-            const description = document.getElementById('p-description').value.trim();
-            const featured = document.getElementById('p-featured').checked;
-            const tags = document.getElementById('p-tags').value.trim();
-
-            const sizesRaw = document.getElementById('p-sizes').value.trim();
-            const sizes = sizesRaw ? sizesRaw.split(',').map(s => s.trim()).filter(Boolean) : ['Standard'];
-
-            const colorsRaw = document.getElementById('p-colors').value.trim();
-            const colors = colorsRaw ? colorsRaw.split(',').map(c => c.trim()).filter(Boolean) : ['Default'];
-
-            const imageInputs = pImagesContainer.querySelectorAll('.p-image-url-input');
-            let images = Array.from(imageInputs).map(i => i.value.trim()).filter(Boolean);
-            if (images.length === 0) images = ['images/product1.jpg'];
-
-            const productId = existingId || `PROD-${Date.now()}`;
-            const currentDate = new Date().toISOString().split('T')[0];
-
-            const productData = {
-                id: productId,
-                name: name,
-                category: category,
-                subcategory: subcategory,
-                description: description,
-                price: price,
-                discountPrice: discountPrice,
-                stock: stock,
-                sizes: sizes,
-                colors: colors,
-                brand: brand,
-                gender: gender,
-                material: material,
-                images: images,
-                featured: featured,
-                status: status,
-                tags: tags,
-                dateAdded: existingId ? (storeProducts.find(p => p.id === existingId)?.dateAdded || currentDate) : currentDate,
-                lastUpdated: currentDate
-            };
-
-            const idx = storeProducts.findIndex(p => p.id === productId);
-            if (idx > -1) {
-                storeProducts[idx] = productData;
-                showToast(`Product "${name}" updated successfully!`, 'success');
-            } else {
-                storeProducts.unshift(productData);
-                showToast(`New product "${name}" created!`, 'success');
-            }
-
-            saveToLocalStorage();
-            renderProducts();
-            renderAdminProducts();
-            adminProductModal.classList.remove('active');
-
-            // Sync with Google Apps Script Endpoint
-            if (config.APPS_SCRIPT_URL) {
-                try {
-                    await fetch(config.APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: existingId ? 'updateProduct' : 'createProduct',
-                            product: productData
-                        })
-                    });
-                } catch (err) {
-                    console.error("Backend product sync failed:", err);
-                }
-            }
-        });
-    }
-
-    // Delete Product
-    async function deleteProduct(productId) {
-        const prod = storeProducts.find(p => p.id === productId);
-        if (!prod) return;
-
-        if (confirm(`Are you sure you want to delete product "${prod.name}" (${productId})?`)) {
-            storeProducts = storeProducts.filter(p => p.id !== productId);
-            saveToLocalStorage();
-            renderProducts();
-            renderAdminProducts();
-            showToast(`Product deleted successfully.`, 'info');
-
-            if (config.APPS_SCRIPT_URL) {
-                try {
-                    await fetch(config.APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'deleteProduct',
-                            productId: productId
-                        })
-                    });
-                } catch (err) {
-                    console.error("Delete product sync failed:", err);
-                }
-            }
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // 12. Admin Payments & Finances Dashboard (Requirement 8)
-    // ----------------------------------------------------------------------
-    function renderAdminFinances() {
-        if (!adminFinancesTableBody) return;
-
-        // Calculate Stats ONLY from confirmed successful financial records
-        const totalRevenue = financialRecords.reduce((acc, rec) => acc + (Number(rec.amount) || 0), 0);
-        const successfulCount = financialRecords.length;
-
-        const todayStr = new Date().toLocaleDateString();
-        const todayRevenue = financialRecords
-            .filter(r => new Date(r.dateTime).toLocaleDateString() === todayStr)
-            .reduce((acc, r) => acc + (Number(r.amount) || 0), 0);
-
-        const currentMonth = new Date().getMonth();
-        const currentYear = new Date().getFullYear();
-        const monthlyRevenue = financialRecords
-            .filter(r => {
-                const d = new Date(r.dateTime);
-                return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-            })
-            .reduce((acc, r) => acc + (Number(r.amount) || 0), 0);
-
-        if (statTotalRevenue) statTotalRevenue.textContent = formatNaira(totalRevenue);
-        if (statSuccessfulCount) statSuccessfulCount.textContent = successfulCount;
-        if (statTodayRevenue) statTodayRevenue.textContent = formatNaira(todayRevenue);
-        if (statMonthlyRevenue) statMonthlyRevenue.textContent = formatNaira(monthlyRevenue);
-        if (statFailedCount) statFailedCount.textContent = failedTxnCount;
-
-        adminFinancesTableBody.innerHTML = '';
-
-        if (financialRecords.length === 0) {
-            adminFinancesTableBody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No successful financial transactions recorded yet.</td>
-                </tr>
-            `;
-            return;
-        }
-
-        financialRecords.forEach(rec => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><code>${rec.transactionId}</code></td>
-                <td><code>${rec.orderId}</code></td>
-                <td><code>${rec.paymentRef}</code></td>
-                <td>${rec.customerRef}</td>
-                <td><strong>${formatNaira(rec.amount)}</strong></td>
-                <td>${rec.dateTime}</td>
-                <td><span class="status-badge status-paid"><i class="fas fa-check"></i> ${rec.paymentStatus}</span></td>
-            `;
-            adminFinancesTableBody.appendChild(tr);
-        });
-    }
-
-    // Render Admin Orders History
-    function renderAdminOrders() {
-        if (!adminOrdersTableBody) return;
-        adminOrdersTableBody.innerHTML = '';
-
-        if (storeOrders.length === 0) {
-            adminOrdersTableBody.innerHTML = `
-                <tr>
-                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">No customer orders logged yet.</td>
-                </tr>
-            `;
-            return;
-        }
-
-        storeOrders.forEach(ord => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><code>${ord.orderId}</code></td>
-                <td>
-                    <strong>${ord.customerName}</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">${ord.customerPhone} | ${ord.customerEmail}</div>
-                </td>
-                <td><span class="badge" style="background-color: #0284c7;">${ord.deliveryType}</span></td>
-                <td><div style="max-width: 220px; font-size: 0.85rem; line-height: 1.3;">${ord.deliveryDestination}</div></td>
-                <td><strong>${formatNaira(ord.totalAmount)}</strong></td>
-                <td><code>${ord.paymentRef}</code></td>
-                <td><span class="status-badge status-paid">${ord.paymentStatus}</span></td>
-                <td>${new Date(ord.timestamp).toLocaleDateString()}</td>
-            `;
-            adminOrdersTableBody.appendChild(tr);
-        });
-    }
-
-    // ----------------------------------------------------------------------
-    // 13. Application Initialization
+    // 11. Application Initialization
     // ----------------------------------------------------------------------
     updateCartUI();
     syncProductsFromBackend();
-    renderAdminFinances();
-    renderAdminOrders();
 });
