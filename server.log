@@ -1,0 +1,16 @@
+127.0.0.1 - - [14/Sep/2026 01:23:50] "HEAD / HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:31:17] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /images/hero3.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /images/collection1.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /images/hero1.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /images/collection2.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /images/hero2.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /env.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /script.js HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /images/fashion1.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:23] "GET /images/collection3.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:24] "GET /images/product2.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:24] "GET /images/product3.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [14/Sep/2026 01:32:24] "GET /images/product1.jpg HTTP/1.1" 200 -
