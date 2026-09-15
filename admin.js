@@ -136,23 +136,39 @@ document.addEventListener('DOMContentLoaded', () => {
         adminOrdersTableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading Orders...</td></tr>`;
 
         try {
-            const response = await fetch(`${configUrl}?action=getAdminData`);
-            const resData = await response.json();
-
-            if (resData.status === 'success') {
-                adminProducts = resData.products || [];
-                adminFinancials = resData.financials || [];
-                adminOrders = resData.orders || [];
-
-                renderAdminProducts(adminProducts);
-                renderAdminFinances(adminFinancials);
-                renderAdminOrders(adminOrders);
-            } else {
-                showToast('Failed to load admin data.', 'error');
+            // Fetch Products, Finances, and Orders (tries getAdminData then individual endpoints)
+            let resData = null;
+            try {
+                const response = await fetch(`${configUrl}?action=getAdminData`);
+                resData = await response.json();
+            } catch (e) {
+                console.warn("getAdminData action not present on script. Fetching individual endpoints.");
             }
+
+            if (resData && resData.status === 'success') {
+                adminProducts = resData.products || [];
+                adminFinancials = resData.financials || resData.finances || [];
+                adminOrders = resData.orders || [];
+            } else {
+                // Individual Fallback Fetching
+                const [pRes, fRes, oRes] = await Promise.all([
+                    fetch(`${configUrl}?action=getProducts`).then(r => r.json()).catch(() => null),
+                    fetch(`${configUrl}?action=getFinances`).then(r => r.json()).catch(() => null),
+                    fetch(`${configUrl}?action=getOrders`).then(r => r.json()).catch(() => null)
+                ]);
+
+                if (pRes && pRes.status === 'success') adminProducts = pRes.products || [];
+                if (fRes && fRes.status === 'success') adminFinancials = fRes.finances || fRes.financials || [];
+                if (oRes && oRes.status === 'success') adminOrders = oRes.orders || [];
+            }
+
+            renderAdminProducts(adminProducts);
+            renderAdminFinances(adminFinancials);
+            renderAdminOrders(adminOrders);
+
         } catch (err) {
             console.error('Error fetching admin data:', err);
-            adminProductsTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--accent-red);">Failed to connect to Google Sheets backend.</td></tr>`;
+            adminProductTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--accent-red);">Failed to connect to Google Sheets backend.</td></tr>`;
         }
     }
 
@@ -165,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         productsToRender.forEach(p => {
-            const firstImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/80?text=No+Img';
+            const firstImg = (p.images && p.images.length > 0 && p.images[0]) ? p.images[0] : 'https://via.placeholder.com/80?text=No+Img';
             const tr = document.createElement('tr');
 
             tr.innerHTML = `
@@ -212,15 +228,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    adminSearchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        const filtered = adminProducts.filter(p =>
-            p.name.toLowerCase().includes(query) ||
-            p.category.toLowerCase().includes(query) ||
-            p.id.toLowerCase().includes(query)
-        );
-        renderAdminProducts(filtered);
-    });
+    if (adminSearchInput) {
+        adminSearchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const filtered = adminProducts.filter(p =>
+                (p.name && p.name.toLowerCase().includes(query)) ||
+                (p.category && p.category.toLowerCase().includes(query)) ||
+                (p.id && p.id.toLowerCase().includes(query))
+            );
+            renderAdminProducts(filtered);
+        });
+    }
 
     // 5. Product Image Input Manager
     function addImageInputRow(urlValue = '') {
@@ -247,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    btnAddImageUrl.addEventListener('click', () => addImageInputRow(''));
+    if (btnAddImageUrl) btnAddImageUrl.addEventListener('click', () => addImageInputRow(''));
 
     // 6. Product Create / Edit Modal logic
     function openProductModal(productId = null) {
@@ -255,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pImagesContainer.innerHTML = '';
 
         if (productId) {
-            const prod = adminProducts.find(p => p.id === productId);
+            const prod = adminProducts.find(p => String(p.id) === String(productId));
             if (!prod) return;
 
             adminModalTitle.textContent = 'Edit Product';
@@ -294,78 +312,80 @@ document.addEventListener('DOMContentLoaded', () => {
         adminProductModal.classList.remove('active');
     }
 
-    btnCreateProduct.addEventListener('click', () => openProductModal(null));
-    closeAdminModalBtn.addEventListener('click', closeProductModal);
-    cancelAdminModalBtn.addEventListener('click', closeProductModal);
+    if (btnCreateProduct) btnCreateProduct.addEventListener('click', () => openProductModal(null));
+    if (closeAdminModalBtn) closeAdminModalBtn.addEventListener('click', closeProductModal);
+    if (cancelAdminModalBtn) cancelAdminModalBtn.addEventListener('click', closeProductModal);
 
     // Save Product Form Handler
-    adminProductForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    if (adminProductForm) {
+        adminProductForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        const configUrl = window.CONFIG ? window.CONFIG.APPS_SCRIPT_URL : '';
-        if (!configUrl) {
-            showToast('Google Apps Script URL is missing in configuration.', 'error');
-            return;
-        }
-
-        const idVal = document.getElementById('admin-form-product-id').value;
-        const imageUrls = Array.from(document.querySelectorAll('.p-image-url-input'))
-                               .map(input => input.value.trim())
-                               .filter(val => val !== '');
-
-        if (imageUrls.length === 0) {
-            showToast('Please provide at least one valid image URL.', 'error');
-            return;
-        }
-
-        const productPayload = {
-            id: idVal || undefined,
-            name: document.getElementById('p-name').value.trim(),
-            category: document.getElementById('p-category').value,
-            subcategory: document.getElementById('p-subcategory').value.trim(),
-            brand: document.getElementById('p-brand').value.trim(),
-            price: parseFloat(document.getElementById('p-price').value),
-            discountPrice: document.getElementById('p-discount-price').value ? parseFloat(document.getElementById('p-discount-price').value) : null,
-            stock: parseInt(document.getElementById('p-stock').value, 10),
-            gender: document.getElementById('p-gender').value,
-            material: document.getElementById('p-material').value.trim(),
-            status: document.getElementById('p-status').value,
-            sizes: document.getElementById('p-sizes').value.split(',').map(s => s.trim()).filter(Boolean),
-            colors: document.getElementById('p-colors').value.split(',').map(c => c.trim()).filter(Boolean),
-            description: document.getElementById('p-description').value.trim(),
-            images: imageUrls,
-            featured: document.getElementById('p-featured').checked,
-            tags: document.getElementById('p-tags').value.split(',').map(t => t.trim()).filter(Boolean)
-        };
-
-        const action = idVal ? 'updateProduct' : 'createProduct';
-        const submitBtn = document.getElementById('save-product-submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving...`;
-
-        try {
-            const response = await fetch(configUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({ action, product: productPayload })
-            });
-
-            const result = await response.json();
-            if (result.status === 'success') {
-                showToast(`Product ${idVal ? 'updated' : 'created'} successfully!`, 'success');
-                closeProductModal();
-                loadAdminData();
-            } else {
-                showToast(`Failed: ${result.message}`, 'error');
+            const configUrl = window.CONFIG ? window.CONFIG.APPS_SCRIPT_URL : '';
+            if (!configUrl) {
+                showToast('Google Apps Script URL is missing in configuration.', 'error');
+                return;
             }
-        } catch (err) {
-            console.error('Save product error:', err);
-            showToast('Network error while saving product.', 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `Save Product`;
-        }
-    });
+
+            const idVal = document.getElementById('admin-form-product-id').value;
+            const imageUrls = Array.from(document.querySelectorAll('.p-image-url-input'))
+                                   .map(input => input.value.trim())
+                                   .filter(val => val !== '');
+
+            if (imageUrls.length === 0) {
+                showToast('Please provide at least one valid image URL.', 'error');
+                return;
+            }
+
+            const productPayload = {
+                id: idVal || undefined,
+                name: document.getElementById('p-name').value.trim(),
+                category: document.getElementById('p-category').value,
+                subcategory: document.getElementById('p-subcategory').value.trim(),
+                brand: document.getElementById('p-brand').value.trim(),
+                price: parseFloat(document.getElementById('p-price').value),
+                discountPrice: document.getElementById('p-discount-price').value ? parseFloat(document.getElementById('p-discount-price').value) : null,
+                stock: parseInt(document.getElementById('p-stock').value, 10),
+                gender: document.getElementById('p-gender').value,
+                material: document.getElementById('p-material').value.trim(),
+                status: document.getElementById('p-status').value,
+                sizes: document.getElementById('p-sizes').value.split(',').map(s => s.trim()).filter(Boolean),
+                colors: document.getElementById('p-colors').value.split(',').map(c => c.trim()).filter(Boolean),
+                description: document.getElementById('p-description').value.trim(),
+                images: imageUrls,
+                featured: document.getElementById('p-featured').checked,
+                tags: document.getElementById('p-tags').value.split(',').map(t => t.trim()).filter(Boolean)
+            };
+
+            const action = idVal ? 'updateProduct' : 'createProduct';
+            const submitBtn = document.getElementById('save-product-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving...`;
+
+            try {
+                const response = await fetch(configUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action, product: productPayload })
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showToast(`Product ${idVal ? 'updated' : 'created'} successfully!`, 'success');
+                    closeProductModal();
+                    loadAdminData();
+                } else {
+                    showToast(`Failed: ${result.message}`, 'error');
+                }
+            } catch (err) {
+                console.error('Save product error:', err);
+                showToast('Network error while saving product.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `Save Product`;
+            }
+        });
+    }
 
     // Delete Product
     async function deleteProduct(productId) {
@@ -394,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 7. Render Finances & Stats
+    // 7. Render Finances & Stats (Supports Aliases for Backend Compatibility)
     function renderAdminFinances(finances) {
         adminFinancesTableBody.innerHTML = '';
 
@@ -409,11 +429,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const monthStr = now.toISOString().slice(0, 7);
 
         finances.forEach(f => {
-            const statusLower = (f.status || '').toLowerCase();
+            const pStatus = f.paymentStatus || f.status || '';
+            const statusLower = pStatus.toLowerCase();
             const amt = parseFloat(f.amount) || 0;
-            const txnDate = new Date(f.timestamp);
+            const rawTime = f.dateTime || f.timestamp || '';
+            const txnDate = new Date(rawTime);
             const dateISO = isNaN(txnDate.getTime()) ? '' : txnDate.toISOString().split('T')[0];
             const monthISO = dateISO.slice(0, 7);
+
+            const txnId = f.txnId || f.transactionId || 'TXN-';
+            const payRef = f.paystackRef || f.paymentRef || '';
+            const custRef = f.customer || f.customerRef || 'Customer';
 
             if (statusLower === 'success' || statusLower === 'successful' || statusLower === 'paid') {
                 totalRev += amt;
@@ -423,12 +449,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong style="color: var(--text-primary);">${f.txnId}</strong></td>
-                    <td>${f.orderId}</td>
-                    <td><span style="font-family: monospace; font-size: 0.85rem; color: var(--accent-red);">${f.paystackRef}</span></td>
-                    <td>${f.customer || 'Customer'}</td>
+                    <td><strong style="color: var(--text-primary);">${txnId}</strong></td>
+                    <td>${f.orderId || '-'}</td>
+                    <td><span style="font-family: monospace; font-size: 0.85rem; color: var(--accent-red);">${payRef}</span></td>
+                    <td>${custRef}</td>
                     <td><strong style="color: var(--accent-green);">${formatCurrency(amt)}</strong></td>
-                    <td><small style="color: var(--text-secondary);">${new Date(f.timestamp).toLocaleString()}</small></td>
+                    <td><small style="color: var(--text-secondary);">${rawTime ? new Date(rawTime).toLocaleString() : '-'}</small></td>
                     <td><span class="badge status-active">Success</span></td>
                 `;
                 adminFinancesTableBody.appendChild(tr);
@@ -442,14 +468,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Update Stats UI
-        statTotalRevenue.textContent = formatCurrency(totalRev);
-        statSuccessfulCount.textContent = successCount;
-        statTodayRevenue.textContent = formatCurrency(todayRev);
-        statMonthlyRevenue.textContent = formatCurrency(monthlyRev);
-        statFailedCount.textContent = failedCount;
+        if (statTotalRevenue) statTotalRevenue.textContent = formatCurrency(totalRev);
+        if (statSuccessfulCount) statSuccessfulCount.textContent = successCount;
+        if (statTodayRevenue) statTodayRevenue.textContent = formatCurrency(todayRev);
+        if (statMonthlyRevenue) statMonthlyRevenue.textContent = formatCurrency(monthlyRev);
+        if (statFailedCount) statFailedCount.textContent = failedCount;
     }
 
-    // 8. Render Orders
+    // 8. Render Orders (Supports Aliases for Backend Compatibility)
     function renderAdminOrders(orders) {
         adminOrdersTableBody.innerHTML = '';
         if (orders.length === 0) {
@@ -459,18 +485,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         orders.forEach(o => {
             const tr = document.createElement('tr');
+            const dest = o.deliveryDestination || o.deliveryAddress || '-';
+            const rawTime = o.timestamp || o.dateTime || '';
+
             tr.innerHTML = `
                 <td><strong style="color: var(--text-primary);">${o.orderId}</strong></td>
                 <td>
-                    <div style="font-weight: 600;">${o.customerName}</div>
-                    <small style="color: var(--text-muted);">${o.customerEmail}</small>
+                    <div style="font-weight: 600;">${o.customerName || '-'}</div>
+                    <small style="color: var(--text-muted);">${o.customerEmail || ''}</small>
                 </td>
-                <td><span class="badge" style="background-color: #3b82f6;">${o.deliveryType}</span></td>
-                <td><small style="color: var(--text-secondary); display: inline-block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${o.deliveryAddress}">${o.deliveryAddress}</small></td>
+                <td><span class="badge" style="background-color: #3b82f6;">${o.deliveryType || 'Standard'}</span></td>
+                <td><small style="color: var(--text-secondary); display: inline-block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${dest}">${dest}</small></td>
                 <td><strong>${formatCurrency(o.totalAmount)}</strong></td>
-                <td><small style="font-family: monospace;">${o.paymentRef}</small></td>
-                <td><span class="badge ${o.paymentStatus === 'Paid' ? 'status-active' : 'status-out'}">${o.paymentStatus}</span></td>
-                <td><small style="color: var(--text-secondary);">${new Date(o.timestamp).toLocaleString()}</small></td>
+                <td><small style="font-family: monospace;">${o.paymentRef || o.paystackRef || '-'}</small></td>
+                <td><span class="badge ${o.paymentStatus === 'Paid' ? 'status-active' : 'status-out'}">${o.paymentStatus || 'Pending'}</span></td>
+                <td><small style="color: var(--text-secondary);">${rawTime ? new Date(rawTime).toLocaleString() : '-'}</small></td>
             `;
             adminOrdersTableBody.appendChild(tr);
         });

@@ -36,6 +36,13 @@ function doGet(e) {
     return jsonResponse({ status: 'success', finances: fetchFinances(ss) });
   } else if (action === 'getOrders') {
     return jsonResponse({ status: 'success', orders: fetchOrders(ss) });
+  } else if (action === 'getAdminData') {
+    return jsonResponse({
+      status: 'success',
+      products: fetchProducts(ss),
+      financials: fetchFinances(ss),
+      orders: fetchOrders(ss)
+    });
   }
 
   return jsonResponse({ status: 'error', message: 'Invalid GET action' });
@@ -140,9 +147,10 @@ function createProduct(ss, product) {
   var sizesStr = Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || '');
   var colorsStr = Array.isArray(product.colors) ? product.colors.join(', ') : (product.colors || '');
   var imagesStr = Array.isArray(product.images) ? product.images.join(', ') : (product.images || '');
+  var prodId = product.id || ("PROD-" + Date.now());
 
   sheet.appendRow([
-    product.id,
+    prodId,
     product.name,
     product.category,
     product.subcategory || '',
@@ -163,6 +171,7 @@ function createProduct(ss, product) {
     product.lastUpdated || new Date().toISOString().split('T')[0]
   ]);
 
+  product.id = prodId;
   return product;
 }
 
@@ -252,7 +261,7 @@ function saveOrderAndPayment(ss, order, financialRecord) {
   ]);
 
   // 2. FINANCIAL RECORDS SHEET (ONLY Confirmed Successful Transactions)
-  if (financialRecord && financialRecord.paymentStatus === 'Successful') {
+  if (financialRecord && (financialRecord.paymentStatus === 'Successful' || financialRecord.paymentStatus === 'Success' || financialRecord.paymentStatus === 'Paid')) {
     var finSheet = ss.getSheetByName("FINANCIAL RECORDS");
     if (!finSheet) {
       finSheet = ss.insertSheet("FINANCIAL RECORDS");
@@ -263,14 +272,14 @@ function saveOrderAndPayment(ss, order, financialRecord) {
     }
 
     finSheet.appendRow([
-      financialRecord.transactionId,
+      financialRecord.transactionId || financialRecord.txnId,
       financialRecord.orderId,
-      financialRecord.paymentRef,
+      financialRecord.paymentRef || financialRecord.paystackRef,
       financialRecord.amount,
       financialRecord.currency || 'NGN',
-      financialRecord.paymentStatus,
-      financialRecord.customerRef,
-      financialRecord.dateTime || new Date().toLocaleString()
+      financialRecord.paymentStatus || 'Successful',
+      financialRecord.customerRef || financialRecord.customer,
+      financialRecord.dateTime || financialRecord.timestamp || new Date().toLocaleString()
     ]);
   }
 }
@@ -288,13 +297,18 @@ function fetchFinances(ss) {
     if (!r[0]) continue;
     records.push({
       transactionId: String(r[0]),
+      txnId: String(r[0]),
       orderId: String(r[1]),
       paymentRef: String(r[2]),
+      paystackRef: String(r[2]),
       amount: Number(r[3]) || 0,
       currency: String(r[4]),
       paymentStatus: String(r[5]),
+      status: String(r[5]),
       customerRef: String(r[6]),
-      dateTime: String(r[7])
+      customer: String(r[6]),
+      dateTime: String(r[7]),
+      timestamp: String(r[7])
     });
   }
   return records;
@@ -320,7 +334,9 @@ function fetchOrders(ss) {
       totalAmount: Number(r[5]) || 0,
       deliveryType: String(r[6]),
       deliveryDestination: String(r[7]),
+      deliveryAddress: String(r[7]),
       paymentRef: String(r[8]),
+      paystackRef: String(r[8]),
       paymentStatus: String(r[9]),
       orderStatus: String(r[10]),
       timestamp: String(r[11])
@@ -347,7 +363,7 @@ function sendOrderConfirmationEmail(order, brevoApiKey) {
       "<p><strong>Total Amount Paid:</strong> ₦" + Number(order.totalAmount).toLocaleString() + "</p>" +
       "<h3>Delivery Information</h3>" +
       "<p><strong>Delivery Type:</strong> " + order.deliveryType + "<br>" +
-      "<strong>Delivery Destination:</strong> " + order.deliveryDestination + "</p>" +
+      "<strong>Delivery Destination:</strong> " + (order.deliveryDestination || order.deliveryAddress) + "</p>" +
       "<p>We are processing your order and will contact you shortly.</p>" +
       "<p>Warm regards,<br><strong>UDDIE'S CLOSET Team</strong><br>Phone / WhatsApp: +234 802 137 5140</p>";
 

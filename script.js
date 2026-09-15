@@ -129,7 +129,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 const data = await res.json();
                 if (data && data.status === 'success' && Array.isArray(data.products)) {
-                    storeProducts = data.products;
+                    // Normalize fetched product fields
+                    storeProducts = data.products.map(p => ({
+                        id: String(p.id),
+                        name: p.name || 'Garment Item',
+                        category: p.category || 'Clothing',
+                        subcategory: p.subcategory || '',
+                        description: p.description || '',
+                        price: parseFloat(p.price) || 0,
+                        discountPrice: p.discountPrice ? parseFloat(p.discountPrice) : null,
+                        stock: parseInt(p.stock, 10) || 0,
+                        sizes: Array.isArray(p.sizes) ? p.sizes : (p.sizes ? String(p.sizes).split(',').map(s => s.trim()) : ['Standard']),
+                        colors: Array.isArray(p.colors) ? p.colors : (p.colors ? String(p.colors).split(',').map(c => c.trim()) : []),
+                        brand: p.brand || "UDDIE'S CLOSET",
+                        gender: p.gender || 'Unisex',
+                        material: p.material || '',
+                        images: Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : ['images/product1.jpg']),
+                        featured: Boolean(p.featured),
+                        status: p.status || 'Active',
+                        tags: Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags || '')
+                    }));
                     saveToLocalStorage();
                 }
             }
